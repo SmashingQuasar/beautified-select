@@ -30,16 +30,16 @@ This plugin aims to ease the beautifying process of HTML 5 `<select>` tags. You 
 
 This is a sample file provided just to give you 5 examples of how to use this plugin.
 
-### reset.css
+### style/reset.css
 
 This file is a basic CSS reset file, it is provided to make the default CSS work in any case. If you intend to change the style of the plugin or if you already have your reset.css file, you do not need it.
 
-### style.css
+### style/style.css
 
 This file contains only the default style for this plugin. It uses low weight CSS selectors so you can easily override them.
 It is not required BUT the plugin will NOT work without a minimum style added to it!
 
-### beautified-select.js
+### javascript/beautified-select.js
 
 The main JavaScript file for this plugin. This file is required for the plugin to work. It does not provide any polyfill or load any external library and is fully standalone.
 
