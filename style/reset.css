@@ -1,0 +1,80 @@
+/* RESET CSS */
+*
+{
+    box-sizing: border-box;
+    position: static;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    text-align: inherit;
+    vertical-align: inherit;
+    text-indent: 0;
+    float: none;
+    clear: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-content: space-between;
+    align-items: stretch;
+    flex: 0 0 auto;
+}
+html
+{
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+body
+{
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    line-height: 1;
+}
+head, meta, style, script, template, [hidden]
+{
+    display: none!important;
+}
+ol, ul
+{
+    list-style-type: none;
+}
+table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+::before, ::after
+{
+    content: none;
+}
+blockquote, q
+{
+    quotes: none;
+}
+blockquote::before, q::before
+{
+    content: open-quote;
+}
+blockquote::after, q::after
+{
+    content: close-quote;
+}
+button::-moz-focus-inner
+{
+    border: 0;
+}
