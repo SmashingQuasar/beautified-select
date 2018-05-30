@@ -26,7 +26,7 @@ This plugin aims to ease the beautifying process of HTML 5 `<select>` tags. You 
 
 ## General philosophy
 
-If you do not want to know what was the idea behind this plugin, please skip to the next section of this readme "Review of files".
+If you do not want to know what was the idea behind this plugin, please skip to the next section of this readme [Review of files](https://github.com/SmashingQuasar/beautified-select#review-of-files).
 
 Beautified Select has been created after spending a lot of time trying to make other `<select>` tag beautifying plugins work with other scripts, CSS and custom environments.
 The main objective of this plugin is to provide a very simple way, that anyone can use to improve the behavior and appearance of `<select>` tags and that does not interfere with other plugins. It was created with the idea of matching as closely as possible the default HTML5 standard of `<select>` tag but also to be used without any single knowledge of JavaScript whatsoever. However, for advanced users able to created JavaScript scripts, it provides very simple and basic features to interact with.
