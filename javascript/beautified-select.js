@@ -225,7 +225,7 @@
 
                             target.classList.toggle("css_selected");
                             select.options[+target.dataset.index].selected = !select.options[+target.dataset.index].selected;
-
+                            
                             if (!select.multiple)
                             {
                                 beautiful_title.textContent = event.target.textContent || select.dataset.placeholder;
