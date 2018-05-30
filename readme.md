@@ -24,7 +24,17 @@ This plugin aims to ease the beautifying process of HTML 5 `<select>` tags. You 
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
-## Reviews of files
+## General philosophy
+
+If you do not want to know what was the idea behind this plugin, please skip to the next section of this readme "Review of files".
+
+Beautified Select has been created after spending a lot of time trying to make other `<select>` tag beautifying plugins work with other scripts, CSS and custom environments.
+The main objective of this plugin is to provide a very simple way, that anyone can use to improve the behavior and appearance of `<select>` tags and that does not interfere with other plugins. It was created with the idea of matching as closely as possible the default HTML5 standard of `<select>` tag but also to be used without any single knowledge of JavaScript whatsoever. However, for advanced users able to created JavaScript scripts, it provides very simple and basic features to interact with.
+It uses mostly custom HTML tags (such as `<beautified-select>`) and ES6 syntax.
+
+If you find any bug, first make sure your own CSS and JavaScript files aren't interacting with the plugin, then please feel free to open a new issue.
+
+## Review of files
 
 ### beautified_select.html
 
@@ -33,6 +43,10 @@ This is a sample file provided just to give you 5 examples of how to use this pl
 ### style/reset.css
 
 This file is a basic CSS reset file, it is provided to make the default CSS work in any case. If you intend to change the style of the plugin or if you already have your reset.css file, you do not need it.
+
+### style/demo.css
+
+This is a CSS file used only for demo purpose, its only aim is to allow the beautified_select.html file to work has intended. You do not need this file for the plugin to work.
 
 ### style/style.css
 
@@ -180,7 +194,7 @@ To enable the reset button, please add the following data-attribute to your `<se
 
 Example:
 ```html
-<!-- This configuration will enable the autocompletion for this select -->
+<!-- This configuration will enable the reset button for this select -->
 
 <beautified-select>
     <select name="sample" data-reset>
@@ -192,3 +206,47 @@ Example:
     </select>
 </beautified-select>
 ```
+
+## JavaScript functions (API)
+
+If you want to use this plugin with AJaX requests or any other advanced scripts you may need the following informations.
+
+### Basic understanding of the execution
+
+By default, Beautified Select executes the following commands:
+
+```javascript
+const raw_selects = document.querySelectorAll("beautified-select select");
+Array.prototype.forEach.call(raw_selects, beautify_select);
+```
+
+This means any `<select>` within a `<beautified-select>` will be parsed by this plugin.
+
+> Note: You do not have to worry about variables name as this plugin is wrapper within capsule.
+
+### Listening events
+
+You may want to interact with Beautified Select through events.
+If you want to know when something changed with Beautified Select, you must listen the `change` event on your `<select>` tag.
+This is the only event that is fired by the plugin, it is fired at two different times:
+
+* When the user has clicked on an option of the dropdown list.
+* When the user has clicked on the reset button.
+
+### Reseting a `<select>`
+
+In case you have modified the base `<select>` tag your `<beautiful-select>` was built on and you want to refresh it, all you need to do is run the following command:
+
+```javascript
+beautify_select(mySelect); // "mySelect" is a handle to your <select> tag.
+```
+
+This will destroy the existing `<beautiful-select>` and rebuild it accordingly.
+
+### Adding nodes to `<beautified-select>`
+
+You can add any children node to the `<beautified-select>` node. The plugin will not destroy them or alter them, the only node that you should not try to modify is the `<beautiful-select>` and its children. This node will get modified when the user interacts with it and completely destroyed and rebuilt if you reset the `<beautified-select>`.
+
+## Special thanks
+
+A special thanks to @kulvar for his help debugging this plugin especially when it comes to handlind the mysteries of browsers.

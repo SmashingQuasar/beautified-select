@@ -58,6 +58,35 @@
         this.appendChild(group_container);
     }
 
+    function get_list_height(beautiful_list, select, total_border)
+    {
+        let children = beautiful_list.querySelectorAll("li.css_option");
+        let base_offsetHeight = beautiful_list.querySelector("li.css_option").offsetHeight;
+
+        if (select.size)
+        {
+            if (select.size < children.length)
+            {
+                return ((base_offsetHeight * select.size) + total_border) + "px";
+            }
+            else
+            {
+                return ((base_offsetHeight * children.length) + total_border) + "px";
+            }
+        }
+        else
+        {
+            if (3 < children.length)
+            {
+                return ((base_offsetHeight * 3) + total_border) + "px";
+            }
+            else
+            {
+                return ((base_offsetHeight * children.length) + total_border) + "px";
+            }
+        }
+    }
+
     function beautify_select(select)
     {
         let wrapper = select.closest("beautified-select");
@@ -124,31 +153,6 @@
         let bottom_border = +computed_style.borderBottomWidth.match(/[0-9]+/);
         let top_border = +computed_style.borderTopWidth.match(/[0-9]+/);
         let total_border = bottom_border + top_border;
-        let children = beautiful_list.querySelectorAll("li.css_option");
-        let base_offsetHeight = beautiful_list.querySelector("li.css_option").offsetHeight;
-
-        if (select.size)
-        {
-            if (select.size < children.length)
-            {
-                beautiful_list.dataset.height = (base_offsetHeight * select.size) + total_border;
-            }
-            else
-            {
-                beautiful_list.dataset.height = (base_offsetHeight * children.length) + total_border;
-            }
-        }
-        else
-        {
-            if (3 < children.length)
-            {
-                beautiful_list.dataset.height = (base_offsetHeight * 3) + total_border;
-            }
-            else
-            {
-                beautiful_list.dataset.height = (base_offsetHeight * children.length) + total_border;
-            }
-        }
 
         beautiful_list.style.height = 0;
 
@@ -194,8 +198,7 @@
 
                         if (!select.disabled)
                         {
-                            wrapper.classList.toggle("css_active");
-                            beautiful_list.style.height = (beautiful_list.offsetHeight - total_border) ? 0 : beautiful_list.dataset.height + "px";
+                            beautiful_list.style.height = wrapper.classList.toggle("css_active") ? get_list_height(beautiful_list, select, total_border) : 0;
                             if (select.dataset.autocomplete === "true")
                             {
                                 wrapper.querySelector("input[type=search]").focus();
