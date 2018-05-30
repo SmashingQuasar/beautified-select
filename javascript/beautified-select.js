@@ -245,7 +245,7 @@
                             }
                             else
                             {
-                                const checked_options = select.querySelectorAll("option:checked");
+                                const checked_options = select.querySelectorAll("option:checked:not([disabled])");
 
                                 let regexp = new RegExp(",? ?(" + target.textContent + ",?)", "g");
                                 let match = beautiful_title.textContent.match(regexp);
