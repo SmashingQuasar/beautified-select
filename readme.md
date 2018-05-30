@@ -249,4 +249,4 @@ You can add any children node to the `<beautified-select>` node. The plugin will
 
 ## Special thanks
 
-A special thanks to @zamralik for his help debugging this plugin especially when it comes to handlind the mysteries of browsers.
+A special thanks to @Zamralik for his help debugging this plugin especially when it comes to handlind the mysteries of browsers.
