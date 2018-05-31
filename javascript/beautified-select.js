@@ -105,7 +105,14 @@
         {
             wrapper.classList.add("css_multiple");
         }
-        document.querySelector("form").reset();
+
+        const form = select.closest("form");
+
+        if (form)
+        {
+            form.reset();
+        }
+
         const default_selection = select.selectedIndex;
 
         const beautiful_title = template_title.cloneNode();
