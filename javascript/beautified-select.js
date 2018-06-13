@@ -33,6 +33,9 @@
         {
             beautiful_option.classList.add("css_disabled");
         }
+        
+        beautiful_option.hidden = option.hasAttribute("readonly") && !option.value;
+        
         this.appendChild(beautiful_option);
     }
 
@@ -60,8 +63,8 @@
 
     function get_list_height(beautiful_list, select, total_border)
     {
-        let children = beautiful_list.querySelectorAll("li.css_option");
-        let base_offsetHeight = beautiful_list.querySelector("li.css_option").offsetHeight;
+        let children = beautiful_list.querySelectorAll("li.css_option:not([hidden])");
+        let base_offsetHeight = beautiful_list.querySelector("li.css_option:not([hidden])").offsetHeight;
 
         if (select.size)
         {
@@ -105,6 +108,12 @@
         {
             wrapper.classList.add("css_multiple");
         }
+        else if (select.dataset.placeholder)
+        {
+            let option = document.createElement("option");
+            option.setAttribute("readonly", "");
+            select.insertBefore(option, select.firstElementChild);
+        }
 
         const form = select.closest("form");
 
@@ -112,12 +121,10 @@
         {
             form.reset();
         }
-
         const default_selection = select.selectedIndex;
-
         const beautiful_title = template_title.cloneNode();
-
         const beautiful_reset = template_reset.cloneNode(true);
+
         if (select.dataset.reset === undefined)
         {
             beautiful_reset.hidden = true;
