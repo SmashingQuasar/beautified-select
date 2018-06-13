@@ -113,7 +113,11 @@
             let option = document.createElement("option");
             option.setAttribute("readonly", "");
             select.insertBefore(option, select.firstElementChild);
-            select.selectedIndex = 0;
+            if (select.querySelector("option"))
+            if (select.querySelector("option:not([readonly])[selected]"))
+            {
+                select.selectedIndex = 0;
+            }
         }
         
         const form = select.closest("form");
