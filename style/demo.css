@@ -19,3 +19,12 @@ body
     width: 100vw;
     height: 100vh;
 }
+
+beautified-select beautiful-select > ul
+{
+    z-index: 200;
+}
+beautified-select input[type="search"]
+{
+    z-index: 100;
+}

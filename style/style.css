@@ -15,7 +15,6 @@ beautified-select beautified-title
     flex-grow: 1;
     height: 46px;
     line-height: 46px;
-    vertical-align: middle;
     cursor: pointer;
     color: rgba(128, 128, 128, 1);
     -moz-user-select: none;
@@ -33,7 +32,6 @@ beautified-select beautified-title::after
     border-left: 2px solid gray;
     border-bottom: 2px solid gray;
     transform: rotate(-45deg);
-    position: absolute;
     right: 65px;
     top: 15px;
     transition: all 0.25s ease-out;
@@ -95,7 +93,7 @@ beautified-select beautiful-select > ul
     overflow-x: hidden;
     overflow-y: auto;
     background-color: white;
-    z-index: 200;
+    z-index: 2;
     opacity: 0;
     pointer-events: none;
     transition: all 0.25s cubic-bezier(0, 0.5, 0, 0.5);
@@ -112,8 +110,8 @@ beautified-select li
     height: 40px;
     line-height: 40px;
     display: block;
-    vertical-align: middle;
     cursor: pointer;
+    flex: 0 0 auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -206,7 +204,7 @@ beautified-select.css_multiple li.css_optgroup li.css_option::after
 beautified-select input[type="search"]
 {
     position: absolute;
-    z-index: 100;
+    z-index: 1;
     top: 0;
     left: 0;
     height: 100%;
