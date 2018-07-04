@@ -231,6 +231,7 @@
                         if (event.target.classList.contains("css_option") && !event.target.closest(".css_disabled"))
                         {
 
+					
                             if (!select.multiple)
                             {
                                 Array.prototype.forEach.call(
@@ -240,16 +241,6 @@
                                         list_item.classList.remove("css_selected");
                                     }
                                 );
-                            }
-
-                            target.classList.toggle("css_selected");
-                            select.options[+target.dataset.index].selected = !select.options[+target.dataset.index].selected;
-                            
-                            if (!select.multiple)
-                            {
-                                beautiful_title.textContent = event.target.textContent || select.dataset.placeholder;
-                                wrapper.classList.remove("css_active");
-                                beautiful_list.style.height = 0;
                                 if (select.dataset.autocomplete === "true")
                                 {
                                     wrapper.querySelector("input[type=search]").value = null;
@@ -261,6 +252,20 @@
                                         }
                                     );
                                 }
+                            }
+
+							const clicked_option = select.options[+target.dataset.index];
+							
+							const state_changed = select.multiple || !clicked_option.selected;
+
+                            target.classList.toggle("css_selected");
+                            clicked_option.selected = select.multiple ? !clicked_option.selected : true;
+
+                            if (!select.multiple)
+                            {
+                                beautiful_title.textContent = event.target.textContent || select.dataset.placeholder;
+                                wrapper.classList.remove("css_active");
+                                beautiful_list.style.height = 0;
                             }
                             else
                             {
@@ -290,7 +295,11 @@
                                     }
                                 }
                             }
-                            select.dispatchEvent(new CustomEvent("change"));
+
+							if (state_changed)
+							{
+								select.dispatchEvent(new CustomEvent("change"));
+							}
 
                         }
                         break;
