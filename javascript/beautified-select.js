@@ -28,7 +28,15 @@
         beautiful_option.classList.add("css_option");
         beautiful_option.dataset.index = option.index;
         beautiful_option.textContent = option.label || option.textContent;
+        if (option.value === "true")
+        {
+            console.log(option);
+            console.log(option.closest("select"));
+            console.log(option.closest("select").selectedIndex);
+            console.log(option.value);
+            console.log(option.selected);
 
+        }
         if (option.disabled)
         {
             beautiful_option.classList.add("css_disabled");
@@ -361,7 +369,7 @@
                 document.querySelectorAll("beautified-select"),
                 function (beautified_select)
                 {
-                    if (beautified_select !== event.target.closest("beautified-select"))
+                    if (beautified_select && (beautified_select !== event.target.closest("beautified-select")) && beautified_select.querySelector("beautiful-select"))
                     {
                         beautified_select.classList.remove("css_active");
                         let list = beautified_select.querySelector("ul");
