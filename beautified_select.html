@@ -11,6 +11,22 @@
 </head>
 <body>
 	<form>
+		
+		<beautified-select>
+			<select name="third_select" data-placeholder="Please select a value">
+				<option readonly></option>
+				<option value="car">Car</option>
+				<option value="truck">Truck</option>
+				<option value="apple">Apple</option>
+				<option value="banana">Banana</option>
+				<option value="turtle">Turtle</option>
+				<option value="africa">Africa</option>
+				<option value="usa">United States of America</option>
+				<option value="productInformation">Information about our products</option>
+			</select>
+		</beautified-select>
+		
+
 		<beautified-select>
 			<select multiple name="first_select" data-placeholder="Please select a value" data-reset size="6" data-autocomplete="true">
 				<optgroup label="Vehicles">
@@ -47,6 +63,7 @@
 
 		<beautified-select>
 			<select name="third_select" data-placeholder="Please select a value">
+				<option readonly></option>
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -86,17 +103,5 @@
 		</beautified-select>
 
 	</form>
-<script>
-	"use strict";
-	{
-		document.querySelector("body").addEventListener(
-			"change",
-			function (event)
-			{
-				console.log(event.currentTarget);
-			}
-		);
-	}
-</script>
 </body>
 </html>
