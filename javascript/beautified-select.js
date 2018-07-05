@@ -28,21 +28,13 @@
         beautiful_option.classList.add("css_option");
         beautiful_option.dataset.index = option.index;
         beautiful_option.textContent = option.label || option.textContent;
-        if (option.value === "true")
-        {
-            console.log(option);
-            console.log(option.closest("select"));
-            console.log(option.closest("select").selectedIndex);
-            console.log(option.value);
-            console.log(option.selected);
-
-        }
+        
         if (option.disabled)
         {
             beautiful_option.classList.add("css_disabled");
         }
         
-        beautiful_option.hidden = option.hasAttribute("readonly") && !option.value;
+        beautiful_option.hidden = option.hasAttribute("disabled") && !option.value;
         
         this.appendChild(beautiful_option);
     }
@@ -119,10 +111,10 @@
         else if (select.dataset.placeholder)
         {
             let option = document.createElement("option");
-            option.setAttribute("readonly", "");
+            option.setAttribute("disabled", "");
             select.insertBefore(option, select.firstElementChild);
-            if (select.querySelector("option"))
-            if (select.querySelector("option:not([readonly])[selected]"))
+            
+            if (!select.querySelector("option[selected]"))
             {
                 select.selectedIndex = 0;
             }
@@ -336,9 +328,18 @@
                             }
                             else
                             {
-                                beautiful_list.childNodes[default_selection].classList.add("css_selected");
-                                beautiful_title.textContent = default_option.textContent || select.dataset.placeholder;
-                                default_option.selected = true;
+                                if (select.dataset.placeholder)
+                                {
+                                    beautiful_list.childNodes[0].classList.add("css_selected");
+                                    beautiful_title.textContent = select.dataset.placeholder;
+                                    select.options[0].selected = true;
+                                }
+                                else
+                                {
+                                    beautiful_list.childNodes[default_selection].classList.add("css_selected");
+                                    beautiful_title.textContent = default_option.textContent || select.dataset.placeholder;
+                                    default_option.selected = true;
+                                }
                             }
                             if (select.dataset.autocomplete === "true")
                             {

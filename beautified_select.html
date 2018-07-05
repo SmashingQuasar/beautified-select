@@ -14,7 +14,7 @@
 		
 		<beautified-select>
 			<select name="third_select" data-placeholder="Please select a value">
-				<option readonly></option>
+				<option disabled></option>
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -63,7 +63,7 @@
 
 		<beautified-select>
 			<select name="third_select" data-placeholder="Please select a value">
-				<option readonly></option>
+				<option disabled></option>
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -101,39 +101,6 @@
 				<option value="productInformation">Information about our products</option>
 			</select>
 		</beautified-select>
-<script>
-	"use strict";
-	{
-		document.addEventListener("DOMContentLoaded", function () {
-			
-			let select = document.createElement("select");
-			select.name = "addresses[]";
-			select.dataset.placeholder="Sélectionnez une adresse";
-			// select.hidden = true;
-			let option_null = document.createElement("option");
-			option_null.appendChild(document.createTextNode("test"));
-			option_null.value = "true";
-			option_null.readonly = true;
-			
-			let option_base = document.createElement("option");
-			option_base.value = "add-address";
-			option_base.appendChild(document.createTextNode("Ajouter une nouvelle adresse..."));
-			
-			
-			select.appendChild(option_null);
-			select.appendChild(option_base);
-			
-			let beautified_select = document.createElement("beautified-select");
-			
-			beautified_select.appendChild(select);
-			
-			document.querySelector("form").appendChild(beautified_select);
-			
-			option_null.selected = true;
-			// beautify_select(select);
-		});
-	}
-</script>
 	</form>
 </body>
 </html>
