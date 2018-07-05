@@ -108,18 +108,6 @@
         {
             wrapper.classList.add("css_multiple");
         }
-        else if (select.dataset.placeholder)
-        {
-            let option = document.createElement("option");
-            option.setAttribute("disabled", "");
-            select.insertBefore(option, select.firstElementChild);
-            
-            if (!select.querySelector("option[selected]"))
-            {
-                select.selectedIndex = 0;
-            }
-        }
-        
         const form = select.closest("form");
 
         if (form)
