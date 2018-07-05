@@ -28,7 +28,7 @@
         beautiful_option.classList.add("css_option");
         beautiful_option.dataset.index = option.index;
         beautiful_option.textContent = option.label || option.textContent;
-        
+
         if (option.disabled)
         {
             beautiful_option.classList.add("css_disabled");
@@ -114,19 +114,35 @@
         {
             form.reset();
         }
-        const default_selection = select.selectedIndex;
+
+        let default_option;
+
+        Array.prototype.forEach.call(
+            select.options,
+            function (option)
+            {
+                default_option = option.defaultSelected ? option : null;
+            }
+        );
+
         const beautiful_title = template_title.cloneNode();
         const beautiful_reset = template_reset.cloneNode(true);
 
-        if (select.dataset.reset === undefined)
-        {
-            beautiful_reset.hidden = true;
-        }
+        beautiful_reset.hidden = (select.dataset.reset === undefined);
+        
         const beautiful_list = template_list.cloneNode();
 
-        const default_option = select.options[default_selection];
+        if (select.dataset.placeholder && !default_option)
+        {
+            let placeholder = document.createElement("option");
 
-        beautiful_title.textContent = default_option && default_option.textContent ? default_option.textContent : select.dataset.placeholder;
+            select.add(placeholder, 0);
+
+            placeholder.disabled = true;
+            placeholder.selected = true;
+        }
+
+        beautiful_title.textContent = (default_option && default_option.textContent) ? default_option.textContent : select.dataset.placeholder;
 
         const raw_groups = select.querySelectorAll("optgroup");
 
@@ -139,7 +155,6 @@
             {
                 Array.prototype.forEach.call(stray_options, beautify_option, beautiful_list);
             }
-
         }
         else
         {
