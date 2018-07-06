@@ -28,7 +28,7 @@
         beautiful_option.classList.add("css_option");
         beautiful_option.dataset.index = option.index;
         beautiful_option.textContent = option.label || option.textContent;
-        
+
         if (option.disabled)
         {
             beautiful_option.classList.add("css_disabled");
@@ -114,23 +114,54 @@
         {
             form.reset();
         }
-        const default_selection = select.selectedIndex;
+
+        let default_option;
+
+        Array.prototype.forEach.call(
+            select.options,
+            function (option)
+            {
+                if (!default_option)
+                {
+                    default_option = option.defaultSelected ? option : null;
+                }
+            }
+        );
+
         const beautiful_title = template_title.cloneNode();
         const beautiful_reset = template_reset.cloneNode(true);
 
-        if (select.dataset.reset === undefined)
-        {
-            beautiful_reset.hidden = true;
-        }
+        beautiful_reset.hidden = (select.dataset.reset === undefined);
+        
         const beautiful_list = template_list.cloneNode();
 
-        const default_option = select.options[default_selection];
+        if (select.dataset.placeholder)
+        {
+            let placeholder = document.createElement("option");
 
-        beautiful_title.textContent = default_option && default_option.textContent ? default_option.textContent : select.dataset.placeholder;
+            select.add(placeholder, 0);
+
+            placeholder.disabled = true;
+
+            if (default_option)
+            {
+                beautiful_title.textContent = default_option.textContent;
+            }
+            else
+            {
+                placeholder.selected = true;
+                beautiful_title.textContent = select.dataset.placeholder;
+            }
+        }
+        else
+        {
+            beautiful_title.textContent = select.options[select.selectedIndex].textContent;
+        }
+
 
         const raw_groups = select.querySelectorAll("optgroup");
 
-        if (raw_groups)
+        if (raw_groups.length)
         {
             Array.prototype.forEach.call(raw_groups, beautify_group, beautiful_list);
             const stray_options = wrapper.querySelectorAll("select > option");
@@ -139,12 +170,10 @@
             {
                 Array.prototype.forEach.call(stray_options, beautify_option, beautiful_list);
             }
-
         }
         else
         {
-            const raw_options = select.querySelectorAll("option");
-            Array.prototype.forEach.call(raw_options, beautify_option, beautiful_list);
+            Array.prototype.forEach.call(select.options, beautify_option, beautiful_list);
         }
         
         let container = template_select.cloneNode();
@@ -219,7 +248,7 @@
                         if (event.target.classList.contains("css_option") && !event.target.closest(".css_disabled"))
                         {
 
-					
+                    
                             if (!select.multiple)
                             {
                                 Array.prototype.forEach.call(
@@ -242,9 +271,9 @@
                                 }
                             }
 
-							const clicked_option = select.options[+target.dataset.index];
-							
-							const state_changed = select.multiple || !clicked_option.selected;
+                            const clicked_option = select.options[+target.dataset.index];
+                            
+                            const state_changed = select.multiple || !clicked_option.selected;
 
                             target.classList.toggle("css_selected");
                             clicked_option.selected = select.multiple ? !clicked_option.selected : true;
@@ -284,10 +313,10 @@
                                 }
                             }
 
-							if (state_changed)
-							{
-								select.dispatchEvent(new CustomEvent("change"));
-							}
+                            if (state_changed)
+                            {
+                                select.dispatchEvent(new CustomEvent("change"));
+                            }
 
                         }
                         break;
