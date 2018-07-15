@@ -29,6 +29,24 @@
         beautiful_option.dataset.index = option.index;
         beautiful_option.textContent = option.label || option.textContent;
 
+        if (option.hasAttribute("itemscope"))
+        {
+            beautiful_option.setAttribute("itemscope", "");
+            option.removeAttribute("itemscope");
+        }
+
+        if (option.hasAttribute("itemtype"))
+        {
+            beautiful_option.setAttribute("itemtype", option.getAttribute("itemtype"));
+            option.removeAttribute("itemtype");
+        }
+
+        if (option.hasAttribute("itemprop"))
+        {
+            beautiful_option.setAttribute("itemprop", option.getAttribute("itemprop"));
+            option.removeAttribute("itemprop");
+        }
+
         if (option.disabled)
         {
             beautiful_option.classList.add("css_disabled");
@@ -45,6 +63,26 @@
         const options = group.querySelectorAll("option");
         const group_title = template_option.cloneNode();
         const group_container = template_option.cloneNode();
+
+
+        if (group.hasAttribute("itemscope"))
+        {
+            beautiful_group.setAttribute("itemscope", "");
+            group.removeAttribute("itemscope");
+        }
+
+        if (group.hasAttribute("itemtype"))
+        {
+            beautiful_group.setAttribute("itemtype", group.getAttribute("itemtype"));
+            group.removeAttribute("itemtype");
+        }
+
+        if (group.hasAttribute("itemprop"))
+        {
+            beautiful_group.setAttribute("itemprop", group.getAttribute("itemprop"));
+            group.removeAttribute("itemprop");
+        }
+
 
         group_container.classList.add("css_optgroup");
 
@@ -179,6 +217,24 @@
         
         let container = template_select.cloneNode();
         select.insertAdjacentElement("afterend", container);
+
+        if (select.hasAttribute("itemscope"))
+        {
+            container.setAttribute("itemscope", "");
+            select.removeAttribute("itemscope");
+        }
+
+        if (select.hasAttribute("itemtype"))
+        {
+            container.setAttribute("itemtype", select.getAttribute("itemtype"));
+            select.removeAttribute("itemtype");
+        }
+
+        if (select.hasAttribute("itemprop"))
+        {
+            container.setAttribute("itemprop", select.getAttribute("itemprop"));
+            select.removeAttribute("itemprop");
+        }
 
         container.appendChild(beautiful_title);
         container.appendChild(beautiful_reset);
