@@ -310,7 +310,7 @@
 
                     let target = event.currentTarget.querySelector(":focus");
                     
-                    if (target.nodeName === "INPUT")
+                    if (["INPUT", "BEAUTIFIED-TITLE"].includes(target.nodeName))
                     {
                         target = undefined;
                     }
