@@ -103,6 +103,11 @@ beautified-select.css_active beautiful-select > ul
     opacity: 1;
     pointer-events: all;
 }
+
+beautified-select li.css_option:focus
+{
+    border: 2px dotted rgb(0, 110, 255);
+}
 beautified-select li
 {
     position: relative;

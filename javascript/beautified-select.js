@@ -1,6 +1,5 @@
 "use strict";
 {
-
     const raw_selects = document.querySelectorAll("beautified-select select"); // All the <select> tags we need to beautify.
 
     // Creating required nodes to append.
@@ -15,6 +14,7 @@
     const template_select = document.createElement("beautiful-select");
 
     const template_option = document.createElement("li");
+    template_option.tabIndex = -1;
 
     const template_input = document.createElement("input");
     template_input.type = "search";
@@ -129,6 +129,7 @@
         );
 
         const beautiful_title = template_title.cloneNode();
+        beautiful_title.tabIndex = select.tabIndex ? select.tabIndex : 0;
         const beautiful_reset = template_reset.cloneNode(true);
 
         beautiful_reset.hidden = (select.dataset.reset === undefined);
@@ -219,6 +220,88 @@
         }
 
         wrapper.addEventListener(
+            "focus",
+            function (event)
+            {
+                if (event.target === beautiful_title)
+                {
+                    let root = beautiful_title.closest("beautified-select").querySelector("select");
+
+                    if (root && !root.disabled)
+                    {
+                        wrapper.classList.add("css_active");
+                        beautiful_list.style.height = get_list_height(beautiful_list, root, total_border);
+                        if (root.dataset.autocomplete === "true")
+                        {
+                            wrapper.querySelector("input[type=search]").focus();
+                        }
+                    }
+
+                    closeOtherSelects(root);
+                    
+                }
+            },
+            true
+        );
+
+        wrapper.addEventListener(
+            "keypress",
+            function (event)
+            {
+                if (["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(event.code))
+                {
+                    event.preventDefault();
+
+                    let target = event.currentTarget.querySelector(":focus");
+                    
+                    if (target.nodeName === "INPUT")
+                    {
+                        target = undefined;
+                    }
+
+                    switch (event.code)
+                    {
+                        case "ArrowDown":
+
+                            if (target)
+                            {
+                                selectNextOption(target);
+                            }
+                            else
+                            {
+                                beautiful_list.querySelector("ul:not(.css_disabled) > li.css_option:not(.css_disabled):not([hidden]):not(.css_optgroup)").focus();
+                            }
+                        
+                        break;
+                        case "ArrowUp":
+
+                            if (target)
+                            {
+                                selectPreviousOption(target);
+                            }
+                            else
+                            {
+                                beautiful_list.querySelector("ul:not(.css_disabled) > li.css_option:not(.css_disabled):not([hidden]):not(.css_optgroup)").focus();
+                            }
+                    
+                        break;
+                        case "Enter":
+
+                            selectOption(event.target);
+
+                        break;
+                        case "Escape":
+
+                            closeOtherSelects(document.body);
+
+                        break;
+                    }
+
+                }
+            }
+        );
+
+        wrapper.addEventListener(
             "click",
             function (event)
             {
@@ -234,10 +317,22 @@
 
                         if (!select.disabled)
                         {
-                            beautiful_list.style.height = wrapper.classList.toggle("css_active") ? get_list_height(beautiful_list, select, total_border) : 0;
-                            if (select.dataset.autocomplete === "true")
+                            if (wrapper.classList.contains("css_active") && !wrapper.parentNode.querySelector(":focus"))
                             {
-                                wrapper.querySelector("input[type=search]").focus();
+                                wrapper.classList.remove("css_active");
+                                beautiful_list.style.height =  0;
+                            }
+                            else
+                            {
+                                wrapper.classList.add("css_active");
+                                beautiful_list.style.height =  get_list_height(beautiful_list, select, total_border);
+
+                                wrapper.querySelector("ul:not(.css_disabled) > li.css_option:not(.css_disabled):not([hidden]):not(.css_optgroup)").focus();
+
+                                if (select.dataset.autocomplete === "true")
+                                {
+                                    wrapper.querySelector("input[type=search]").focus();
+                                }
                             }
                         }
 
@@ -245,80 +340,8 @@
 
                     case "LI":
 
-                        if (event.target.classList.contains("css_option") && !event.target.closest(".css_disabled"))
-                        {
+                        selectOption(event.target);
 
-                    
-                            if (!select.multiple)
-                            {
-                                Array.prototype.forEach.call(
-                                    beautiful_list.childNodes,
-                                    function (list_item)
-                                    {
-                                        list_item.classList.remove("css_selected");
-                                    }
-                                );
-                                if (select.dataset.autocomplete === "true")
-                                {
-                                    wrapper.querySelector("input[type=search]").value = null;
-                                    Array.prototype.forEach.call(
-                                        beautiful_list.querySelectorAll("li.css_option"),
-                                        function (option)
-                                        {
-                                            option.hidden = false;
-                                        }
-                                    );
-                                }
-                            }
-
-                            const clicked_option = select.options[+target.dataset.index];
-                            
-                            const state_changed = select.multiple || !clicked_option.selected;
-
-                            target.classList.toggle("css_selected");
-                            clicked_option.selected = select.multiple ? !clicked_option.selected : true;
-
-                            if (!select.multiple)
-                            {
-                                beautiful_title.textContent = event.target.textContent || select.dataset.placeholder;
-                                wrapper.classList.remove("css_active");
-                                beautiful_list.style.height = 0;
-                            }
-                            else
-                            {
-                                const checked_options = select.querySelectorAll("option:checked:not([disabled])");
-
-                                let regexp = new RegExp(",? ?(" + target.textContent + ",?)", "g");
-                                let match = beautiful_title.textContent.match(regexp);
-
-
-                                if (match)
-                                {
-                                    beautiful_title.textContent = beautiful_title.textContent.replace(match[0], "");
-                                    if (!checked_options.length)
-                                    {
-                                        beautiful_title.textContent = select.dataset.placeholder || "";
-                                    }
-                                }
-                                else
-                                {
-                                    if (checked_options.length === 1)
-                                    {
-                                        beautiful_title.textContent = target.textContent;
-                                    }
-                                    else
-                                    {
-                                        beautiful_title.textContent += ", " + target.textContent;
-                                    }
-                                }
-                            }
-
-                            if (state_changed)
-                            {
-                                select.dispatchEvent(new CustomEvent("change"));
-                            }
-
-                        }
                         break;
 
                     case "BUTTON":
@@ -377,39 +400,190 @@
         );
     }
 
+    function closeOtherSelects(select)
+    {
+        let root = null;
+        if (select)
+        {
+            root = select.closest("beautified-select");
+        }
+
+        let beautified_selects = document.querySelectorAll("beautified-select");
+        beautified_selects = Array.from(beautified_selects);
+
+        beautified_selects.forEach(
+            function (beautified_select)
+            {
+                if ((beautified_select !== root) && beautified_select.querySelector("beautiful-select"))
+                {
+                    beautified_select.classList.remove("css_active");
+                    let list = beautified_select.querySelector("ul");
+                    let style = window.getComputedStyle(list);
+                    let borders = style.borderBottomWidth.match(/[0-9]+/) + style.borderTopWidth.match(/[0-9]+/);
+                    list.style.height = (list.offsetHeight - borders) ? 0 : list.dataset.height + "px";
+
+                    if (beautified_select.querySelector("select").dataset.autocomplete === "true")
+                    {
+                        beautified_select.querySelector("input[type=search]").value = null;
+
+                        Array.prototype.forEach.call(
+                            beautified_select.querySelectorAll("li.css_option"),
+                            function (option)
+                            {
+                                option.hidden = false;
+                            }
+                        );
+                    }
+                }
+            }
+        );
+    }
+
+    function selectNextOption(option)
+    {
+
+        if (option === null || option.nodeName !== "LI")
+        {
+            return;
+        }
+
+        let wrapper = option.closest("beautiful-select");
+        let options_list = wrapper.querySelectorAll("ul:not(.css_disabled) > li.css_option:not(.css_disabled):not([hidden]):not(.css_optgroup)");
+
+        let index = 0;
+        
+        for (let i = 0; i < options_list.length; ++i)
+        {
+            if (options_list[i] === option)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (options_list[index + 1])
+        {
+            options_list[index + 1].focus();
+        }
+
+    }
+
+    function selectPreviousOption(option)
+    {
+
+        if (option === null || option.nodeName !== "LI")
+        {
+            return;
+        }
+
+        let wrapper = option.closest("beautiful-select");
+        let options_list = wrapper.querySelectorAll("ul:not(.css_disabled) > li.css_option:not(.css_disabled):not([hidden]):not(.css_optgroup)");
+
+        let index = 0;
+        
+        for (let i = 0; i < options_list.length; ++i)
+        {
+            if (options_list[i] === option)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (options_list[index - 1])
+        {
+            options_list[index - 1].focus();
+        }
+
+    
+    }
+    function selectOption(option)
+    {
+        
+        if (option.classList.contains("css_option") && !option.closest(".css_disabled"))
+        {
+            let wrapper = option.closest("beautified-select");
+            let select = wrapper.querySelector("select");
+            let beautiful_list = wrapper.querySelector("beautiful-select > ul");
+            let beautiful_title = wrapper.querySelector("beautified-title");
+
+            if (!select.multiple)
+            {
+                Array.prototype.forEach.call(
+                    beautiful_list.childNodes,
+                    function (list_item)
+                    {
+                        list_item.classList.remove("css_selected");
+                    }
+                );
+                if (select.dataset.autocomplete === "true")
+                {
+                    wrapper.querySelector("input[type=search]").value = null;
+                    Array.prototype.forEach.call(
+                        beautiful_list.querySelectorAll("li.css_option"),
+                        function (option)
+                        {
+                            option.hidden = false;
+                        }
+                    );
+                }
+            }
+
+            const clicked_option = select.options[+option.dataset.index];
+            
+            const state_changed = select.multiple || !clicked_option.selected;
+
+            option.classList.toggle("css_selected");
+            clicked_option.selected = select.multiple ? !clicked_option.selected : true;
+
+            if (!select.multiple)
+            {
+                beautiful_title.textContent = option.textContent || select.dataset.placeholder;
+                wrapper.classList.remove("css_active");
+                beautiful_list.style.height = 0;
+            }
+            else
+            {
+                const checked_options = select.querySelectorAll("option:checked:not([disabled])");
+
+                let regexp = new RegExp(",? ?(" + option.textContent + ",?)", "g");
+                let match = beautiful_title.textContent.match(regexp);
+
+
+                if (match)
+                {
+                    beautiful_title.textContent = beautiful_title.textContent.replace(match[0], "");
+                    if (!checked_options.length)
+                    {
+                        beautiful_title.textContent = select.dataset.placeholder || "";
+                    }
+                }
+                else
+                {
+                    if (checked_options.length === 1)
+                    {
+                        beautiful_title.textContent = option.textContent;
+                    }
+                    else
+                    {
+                        beautiful_title.textContent += ", " + option.textContent;
+                    }
+                }
+            }
+
+            if (state_changed)
+            {
+                select.dispatchEvent(new CustomEvent("change"));
+            }
+
+        }
+    }
+
     Array.prototype.forEach.call(raw_selects, beautify_select);
     
     document.addEventListener(
         "click",
         function (event)
         {
-            Array.prototype.forEach.call(
-                document.querySelectorAll("beautified-select"),
-                function (beautified_select)
-                {
-                    if (beautified_select && (beautified_select !== event.target.closest("beautified-select")) && beautified_select.querySelector("beautiful-select"))
-                    {
-                        beautified_select.classList.remove("css_active");
-                        let list = beautified_select.querySelector("ul");
-                        let style = window.getComputedStyle(list);
-                        let borders = style.borderBottomWidth.match(/[0-9]+/) + style.borderTopWidth.match(/[0-9]+/);
-                        list.style.height = (list.offsetHeight - borders) ? 0 : list.dataset.height + "px";
-
-                        if (beautified_select.querySelector("select").dataset.autocomplete === "true")
-                        {
-                            beautified_select.querySelector("input[type=search]").value = null;
-
-                            Array.prototype.forEach.call(
-                                beautified_select.querySelectorAll("li.css_option"),
-                                function (option)
-                                {
-                                    option.hidden = false;
-                                }
-                            );
-                        }
-                    }
-                }
-            );
+            closeOtherSelects(event.target);
         }
     );
     
