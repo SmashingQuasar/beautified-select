@@ -1,5 +1,7 @@
 # Beautified Select
 
+[![Version](https://img.shields.io/badge/version-v1.0-blue.svg)](https://github.com/SmashingQuasar/beautified-select/tree/v1.0)
+
 This plugin aims to ease the beautifying process of HTML 5 `<select>` tags. You do not require any JavaScript knowledge to use this plugin as it is based on the HTML standard and uses the default HTML syntax. Please read the following sections to have more information on the plugin syntax.
 
 ## Licence
