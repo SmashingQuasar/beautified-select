@@ -283,6 +283,8 @@
             {
                 focus_triggered = true;
                 
+                console.log(event.target);
+
                 if (event.target === beautiful_title)
                 {
                     let root = beautiful_title.closest("beautified-select").querySelector("select");
@@ -302,17 +304,6 @@
                 }
             },
             true
-        );
-
-        wrapper.addEventListener(
-            "focusout",
-            function (event)
-            {
-                focus_triggered = false;
-                has_focus = false;
-                wrapper.classList.remove("css_active");
-                beautiful_list.style.height =  0;
-            }
         );
 
         wrapper.addEventListener(
@@ -414,8 +405,10 @@
 
                     case "LI":
 
+                        has_focus = false;
+                        focus_triggered = false;
                         selectOption(event.target);
-
+                        
                         break;
 
                     case "BUTTON":
