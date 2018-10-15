@@ -283,8 +283,6 @@
             {
                 focus_triggered = true;
                 
-                console.log(event.target);
-
                 if (event.target === beautiful_title)
                 {
                     let root = beautiful_title.closest("beautified-select").querySelector("select");
@@ -408,7 +406,7 @@
                         has_focus = false;
                         focus_triggered = false;
                         selectOption(event.target);
-                        
+
                         break;
 
                     case "BUTTON":
