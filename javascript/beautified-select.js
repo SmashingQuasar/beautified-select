@@ -148,10 +148,10 @@
         }
         const form = select.closest("form");
 
-        if (form)
-        {
-            form.reset();
-        }
+        // if (form)
+        // {
+        //     form.reset();
+        // }
 
         let default_option;
 
