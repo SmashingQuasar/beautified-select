@@ -137,7 +137,13 @@
         if (!wrapper)
         {
             throw new Error("Couldn't beautify select since it is not child of a <beautified-select> tag.");
-            return false;
+        }
+
+        let existing_select = wrapper.querySelector("beautiful-select");
+        
+        if (existing_select !== null)
+        {
+            existing_select.remove();
         }
 
         select.hidden = true;
@@ -146,7 +152,7 @@
         {
             wrapper.classList.add("css_multiple");
         }
-        const form = select.closest("form");
+        // const form = select.closest("form");
 
         // if (form)
         // {
@@ -166,7 +172,12 @@
             }
         );
 
-        const beautiful_title = template_title.cloneNode();
+        function getBeautifulTitle()
+        {
+            return wrapper.querySelector("beautiful-title");
+        }
+
+        let beautiful_title = template_title.cloneNode();
         beautiful_title.tabIndex = select.tabIndex ? select.tabIndex : 0;
         const beautiful_reset = template_reset.cloneNode(true);
 
@@ -283,9 +294,9 @@
             {
                 focus_triggered = true;
                 
-                if (event.target === beautiful_title)
+                if (event.target === getBeautifulTitle())
                 {
-                    let root = beautiful_title.closest("beautified-select").querySelector("select");
+                    let root = getBeautifulTitle().closest("beautified-select").querySelector("select");
 
                     if (root && !root.disabled)
                     {
@@ -375,7 +386,7 @@
                 {
                     case "BEAUTIFIED-TITLE":
 
-                        if (!select.disabled && wrapper.classList.contains("css_active") && event.target === beautiful_title && has_focus)
+                        if (!select.disabled && wrapper.classList.contains("css_active") && event.target === getBeautifulTitle() && has_focus)
                         {
                             wrapper.classList.remove("css_active");
                             beautiful_list.style.height =  0;
@@ -383,7 +394,7 @@
                         else
                         {
                                     
-                            let root = beautiful_title.closest("beautified-select").querySelector("select");
+                            let root = wrapper.querySelector("select");
 
                             if (root && !root.disabled)
                             {
@@ -429,20 +440,20 @@
                             );
                             if (select.multiple)
                             {
-                                beautiful_title.textContent = select.dataset.placeholder || "";
+                                getBeautifulTitle().textContent = select.dataset.placeholder || "";
                             }
                             else
                             {
                                 if (select.dataset.placeholder)
                                 {
                                     beautiful_list.childNodes[0].classList.add("css_selected");
-                                    beautiful_title.textContent = select.dataset.placeholder;
+                                    getBeautifulTitle().textContent = select.dataset.placeholder;
                                     select.options[0].selected = true;
                                 }
                                 else
                                 {
                                     beautiful_list.childNodes[default_selection].classList.add("css_selected");
-                                    beautiful_title.textContent = default_option.textContent || select.dataset.placeholder;
+                                    getBeautifulTitle().textContent = default_option.textContent || select.dataset.placeholder;
                                     default_option.selected = true;
                                 }
                             }
@@ -477,6 +488,9 @@
                 }
             }
         );
+
+        select.dispatchEvent(new CustomEvent("change"));
+
     }
 
     function closeOtherSelects(select)
