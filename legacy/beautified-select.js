@@ -12,15 +12,15 @@
     const template_list = document.createElement("ul");
 
     const template_select = document.createElement("beautiful-select");
-
+/*
     const template_option = document.createElement("li");
     template_option.tabIndex = -1;
-
+*/
     const template_input = document.createElement("input");
     template_input.type = "search";
 
+    /*
     const template_group = document.createElement("ul");
-
     function beautify_option(option)
     {
         const beautiful_option = template_option.cloneNode();
@@ -56,14 +56,13 @@
         
         this.appendChild(beautiful_option);
     }
-
+    
     function beautify_group(group)
     {
         const beautiful_group = template_group.cloneNode();
         const options = group.querySelectorAll("option");
         const group_title = template_option.cloneNode();
         const group_container = template_option.cloneNode();
-
 
         if (group.hasAttribute("itemscope"))
         {
@@ -85,12 +84,11 @@
 
 
         group_container.classList.add("css_optgroup");
-
         if (group.disabled)
         {
             beautiful_group.classList.add("css_disabled");
         }
-
+        
         group_title.classList.add("css_label");
         group_title.textContent = group.label || "";
         beautiful_group.appendChild(group_title);
@@ -98,6 +96,7 @@
         group_container.appendChild(beautiful_group);
         this.appendChild(group_container);
     }
+     */
 
     function get_list_height(beautiful_list, select, total_border)
     {
