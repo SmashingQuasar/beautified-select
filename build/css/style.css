@@ -1,270 +1,138 @@
+beautified-select {
+  cursor: pointer;
+  display: block;
+}
+
+beautified-select select {
+  display: none !important;
+}
+
 beautified-select beautiful-select {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+}
+
+beautified-select beautiful-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  width: 350px;
-  border: 2px solid gray;
-}
-
-beautified-select beautified-title {
-  display: block;
-  width: 0px;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  height: 46px;
-  line-height: 46px;
-  cursor: pointer;
-  color: gray;
-  -moz-user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 40px 0 10px;
-}
-
-beautified-select beautified-title::after {
-  position: absolute;
-  content: " ";
-  width: 10px;
-  height: 10px;
-  border-left: 2px solid gray;
-  border-bottom: 2px solid gray;
-  -webkit-transform: rotate(-45deg);
-          transform: rotate(-45deg);
-  right: 65px;
-  top: 15px;
-  -webkit-transition: all 0.25s ease-out;
-  transition: all 0.25s ease-out;
-}
-
-beautified-select select:not([data-reset]) ~ beautiful-select beautified-title::after {
-  right: 15px;
-}
-
-beautified-select.css_active beautified-title::after {
-  -webkit-transform: rotate(135deg);
-          transform: rotate(135deg);
-  top: 20px;
-  -webkit-transition: all 0.25s ease-out;
-  transition: all 0.25s ease-out;
-}
-
-beautified-select button {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  outline: none;
-  border: none;
-  border-left: 2px solid gray;
-  color: gray;
-  width: 46px;
-  height: 46px;
-  font-size: 22px;
-  line-height: 22px;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-transition: all 0.25s ease-in;
-  transition: all 0.25s ease-in;
-  padding-bottom: 3px;
-}
-
-beautified-select button:hover {
-  color: white;
-  background-color: gray;
-  -webkit-transition: all 0.25s ease-out;
-  transition: all 0.25s ease-out;
-}
-
-beautified-select select[disabled] ~ beautiful-select beautified-title,
-beautified-select select[disabled] ~ beautiful-select button,
-beautified-select select[disabled] ~ beautiful-select button:hover {
-  background-color: gainsboro;
-  color: #303030;
-}
-
-beautified-select beautiful-select > ul {
-  position: absolute;
-  top: 46px;
-  left: -2px;
-  right: -2px;
-  border: 2px solid gray;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: white;
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-  -webkit-transition: all 0.25s cubic-bezier(0, 0.5, 0, 0.5);
-  transition: all 0.25s cubic-bezier(0, 0.5, 0, 0.5);
-}
-
-beautified-select.css_active beautiful-select > ul {
-  opacity: 1;
-  pointer-events: all;
-}
-
-beautified-select li.css_option:focus {
-  border: 2px dotted #006eff;
-}
-
-beautified-select li {
-  position: relative;
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  display: block;
-  cursor: pointer;
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #303030;
-  -webkit-transition: background-color 0.4s cubic-bezier(0.16, 0.78, 0.86, 0.93);
-  transition: background-color 0.4s cubic-bezier(0.16, 0.78, 0.86, 0.93);
-  padding: 0 20px 0 40px;
-  -moz-user-select: none;
-}
-
-beautified-select select:not([multiple]) ~ beautiful-select ul li.css_option {
-  padding: 0 20px 0 20px;
-}
-
-beautified-select li.css_optgroup {
-  height: auto;
-  padding: 0;
-}
-
-beautified-select li.css_optgroup ul {
-  width: 100%;
-}
-
-beautified-select li.css_label {
-  width: 100%;
-  font-weight: bold;
-}
-
-beautified-select ul:not(.css_disabled) > li.css_label {
-  background-color: #94d9ff;
-  color: #484848;
-}
-
-beautified-select li.css_optgroup li.css_option {
-  padding: 0 20px 0 80px;
-}
-
-beautified-select li:not(:first-child) {
-  border-top: 1px solid #e1e1e1;
-}
-
-beautified-select li.css_selected {
-  background-color: #198cff;
-  color: white;
-}
-
-beautified-select ul:not(.css_disabled) > li.css_option:not(.css_selected):not(.css_disabled):hover {
-  background-color: #e1e1e1;
-  color: #303030;
-}
-
-beautified-select.css_multiple li.css_option::before {
-  position: absolute;
-  content: " ";
-  width: 13px;
-  height: 13px;
-  border-radius: 7px;
-  border: 1px solid gray;
-  display: block;
-  top: 13px;
-  left: 13px;
-  background-color: white;
-}
-
-beautified-select.css_multiple li.css_selected::before {
-  border: 1px solid white;
-  color: white;
-  background-color: transparent;
-}
-
-beautified-select.css_multiple li.css_selected::after {
-  position: absolute;
-  display: block;
-  content: " ";
-  height: 9px;
-  width: 9px;
-  top: 16px;
-  border-radius: 100%;
-  background-color: white;
-  left: 16px;
-}
-
-beautified-select.css_multiple li.css_optgroup li.css_option::before {
-  left: 53px;
-}
-
-beautified-select.css_multiple li.css_optgroup li.css_option::after {
-  left: 56px;
-}
-
-beautified-select input[type="search"] {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  pointer-events: none;
-  background-color: #ebebeb;
-  -webkit-transition: opacity 0.4s cubic-bezier(0.16, 0.78, 0.86, 0.93);
-  transition: opacity 0.4s cubic-bezier(0.16, 0.78, 0.86, 0.93);
-}
-
-beautified-select.css_active input[type="search"] {
-  opacity: 1;
-  pointer-events: all;
   padding: 10px;
+  width: 100%;
 }
 
-beautified-select ul.css_disabled,
-beautified-select li.css_disabled {
-  background-color: gainsboro;
-  color: #303030;
+beautified-select beautiful-list {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: 100%;
+  overflow: auto;
+  width: 100%;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 0;
+  -webkit-transition: height 0.25s ease-out;
+  transition: height 0.25s ease-out;
+  background-color: white;
+  z-index: 1;
+}
+
+beautified-select beautiful-group group-title,
+beautified-select beautiful-group beautiful-option {
+  padding-left: 25px;
+}
+
+beautified-select beautiful-option {
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+beautified-select beautiful-option:hover {
+  background-color: lightblue;
+}
+
+beautified-select beautiful-option.active {
+  background-color: purple;
+}
+
+form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+main, header {
+  width: 100vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  padding: 15px;
+}
+
+section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  margin: 15px;
+}
+
+beautified-select {
+  min-width: 150px;
+  margin: 10px;
+}
+
+beautified-select beautiful-title {
+  border: 2px dashed mediumseagreen;
+}
+
+beautified-select beautiful-list.unfolded {
+  border: 2px dashed gray;
+}
+
+beautified-select beautiful-option {
+  background-color: white;
+}
+
+beautified-select group-title {
+  background-color: lightgray;
+  font-weight: bold;
 }
 /*# sourceMappingURL=style.css.map */

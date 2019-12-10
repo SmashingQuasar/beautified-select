@@ -1,6 +1,10 @@
 class BeautifulOption extends HTMLElement
 {
-    public index: number;
+    private originalOption: HTMLOptionElement;
+    private beautifulSelect: BeautifulSelect|null = null;
+    private active: boolean = false;
+    private value: string = "";
+    private content: string = "";
 
     /**
      * constructor
@@ -9,73 +13,199 @@ class BeautifulOption extends HTMLElement
     {
         super();
 
-        this.index = option.index;
-        this.textContent = option.label || option.textContent;
-        this.tabIndex = -1;
+        /* Managing vanilla option */
         
-        /* Global attributes */
+        this.originalOption = option;
 
-        /* itemscope */
+        this.build();
 
-        if (option.hasAttribute("itemscope"))
-        {
-            this.setAttribute("itemscope", ""); // itemscope has no value. It only need to be present on the node.
-            option.removeAttribute("itemscope");
-        }
-
-        /* itemtype */
-
-        if (option.hasAttribute("itemtype"))
-        {
-            const ITEM_TYPE: string|null = option.getAttribute("itemtype");
-
-            if (ITEM_TYPE !== null)
-            {
-                this.setAttribute("itemtype", ITEM_TYPE);
-            }
-            option.removeAttribute("itemtype");
-        }
-
-        /* itemprop */
-
-        if (option.hasAttribute("itemprop"))
-        {
-            const ITEM_PROP: string|null = option.getAttribute("itemprop");
-
-            if (ITEM_PROP !== null)
-            {
-                this.setAttribute("itemprop", ITEM_PROP);
-            }
-            option.removeAttribute("itemprop");
-        }
-
-        /* Disabling option */
-        
-        if (option.disabled)
-        {
-            this.classList.add("css_disabled");
-        }
-        
-        /* Hiding option */
-
-        this.hidden = option.hasAttribute("disabled") || option.value === ""; // Updated to change && by ||
+        this.addEventListener("click", this.toggleActivation);
     }
 
     /**
-     * getIndex
+     * getActive
      */
-    public getIndex(): number
+    public getActive(): boolean
     {
-        return this.index;
+        return this.active;    
     }
 
     /**
-     * setIndex
+     * getOriginalOption
      */
-    public setIndex(index: number): void
+    public getOriginalOption(): HTMLOptionElement|null
     {
-        this.index = index;
+        return this.originalOption;
     }
+
+    /**
+     * getValue
+     */
+    public getValue(): string
+    {
+        return this.value;    
+    }
+
+    /**
+     * getContent
+     */
+    public getContent(): string
+    {
+        return this.content;
+    }
+
+    /**
+     * setContent
+     */
+    public setContent(content: string): void
+    {
+        this.content = content;
+        this.textContent = content;    
+    }
+
+    /**
+     * getBeautifulSelect
+     */
+    public getBeautifulSelect(): BeautifulSelect|null
+    {
+        return this.beautifulSelect;    
+    }
+
+    /**
+     * setBeautifulSelect
+     */
+    public setBeautifulSelect(beautiful_select: BeautifulSelect): void
+    {
+        this.beautifulSelect = beautiful_select;
+    }
+    
+    /**
+     * activate
+     */
+    public activate(): void
+    {
+        this.active = true;
+        this.classList.add("active");
+
+        if (this.originalOption === null)
+        {
+            return;
+        }
+
+        this.originalOption.selected = true;
+
+        if (this.beautifulSelect === null)
+        {
+            return;
+        }
+
+        const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
+
+        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+        this.beautifulSelect.refreshTitle();
+
+        const LIST: BeautifulList|null = this.beautifulSelect.getList();
+
+        if (LIST === null)
+        {
+            return;
+        }
+        
+        if (this.beautifulSelect.getMultiple() === false)
+        {
+            LIST.hide();
+        }
+
+    }
+
+    /**
+     * deactivate
+     */
+    public deactivate(): void
+    {
+        this.active = false;
+        this.classList.remove("active");
+
+        if (this.originalOption === null)
+        {
+            return;
+        }
+
+        this.originalOption.selected = false;
+        
+        if (this.beautifulSelect === null)
+        {
+            return;
+        }
+
+        const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
+
+        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+        this.beautifulSelect.refreshTitle();
+
+        const LIST: BeautifulList|null = this.beautifulSelect.getList();
+
+        if (LIST === null)
+        {
+            return;
+        }
+        
+        if (this.beautifulSelect.getMultiple() === false)
+        {
+            LIST.hide();
+        }
+
+        
+    }
+
+    /**
+     * toggleActivation
+     */
+    public toggleActivation(): boolean
+    {
+        if (this.beautifulSelect !== null)
+        {
+            if (this.beautifulSelect.getMultiple())
+            {
+                this.active ? this.deactivate() : this.activate();
+            }
+            else
+            {
+                this.activate();
+            }
+        }
+
+        return this.active;
+    }
+
+    /**
+     * build
+     */
+    public build(): void
+    {
+        this.value = this.originalOption.value;    
+        this.setContent(this.originalOption.textContent || "");
+
+        if (this.originalOption.selected)
+        {
+            this.active = true;
+            this.classList.add("active");
+
+            if (this.beautifulSelect === null)
+            {
+                return;
+            }
+
+            this.beautifulSelect.refreshTitle();
+        
+        }
+        else
+        {
+            this.active = false;
+            this.classList.remove("active");
+        }
+    }
+
 }
 
-customElements.define("beautiful-option", BeautifulOption, { extends: "option" });
+customElements.define("beautiful-option", BeautifulOption);

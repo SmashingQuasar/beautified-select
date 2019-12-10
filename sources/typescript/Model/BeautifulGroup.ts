@@ -1,90 +1,142 @@
 class BeautifulGroup extends HTMLElement
 {
-    private customTitle: GroupTitle;
-    private container: GroupContainer;
+    private beautifulSelect: BeautifulSelect|null = null;
+    private originalGroup: HTMLOptGroupElement;
+    private options: Array<BeautifulOption> = [];
 
     /**
      * constructor
      */
-    public constructor(optgroup: HTMLOptGroupElement)
+    public constructor(group: HTMLOptGroupElement)
     {
         super();
 
-        const BASE_OPTIONS: NodeListOf<HTMLOptionElement> = this.querySelectorAll("option");
-
-        this.customTitle = new GroupTitle(optgroup.label);
-        this.appendChild(this.customTitle);
-        this.container = new GroupContainer(BASE_OPTIONS);
-        this.appendChild(this.container);
-
-        /* Global attributes */
-
-        /* itemscope */
-
-        if (optgroup.hasAttribute("itemscope"))
-        {
-            this.setAttribute("itemscope", ""); // itemscope has no value. It only need to be present on the node.
-            optgroup.removeAttribute("itemscope");
-        }
-
-        /* itemtype */
-
-        if (optgroup.hasAttribute("itemtype"))
-        {
-            const ITEM_TYPE: string|null = optgroup.getAttribute("itemtype");
-
-            if (ITEM_TYPE !== null)
-            {
-                this.setAttribute("itemtype", ITEM_TYPE);
-            }
-            optgroup.removeAttribute("itemtype");
-        }
-
-        /* itemprop */
-
-        if (optgroup.hasAttribute("itemprop"))
-        {
-            const ITEM_PROP: string|null = optgroup.getAttribute("itemprop");
-
-            if (ITEM_PROP !== null)
-            {
-                this.setAttribute("itemprop", ITEM_PROP);
-            }
-            optgroup.removeAttribute("itemprop");
-        }
-
-        /* Disabling optgroup */
-        
-        if (optgroup.disabled)
-        {
-            this.classList.add("css_disabled");
-        }
-        
+        this.originalGroup = group;
     }
 
     /**
      * getOptions
      */
-    public getOptions(): NodeListOf<BeautifulOption>
+    public getOptions(): Array<BeautifulOption>
     {
-        return this.container.getOptions();    
+        return this.options;
     }
 
     /**
-     * getStaticOptions
+     * setOptions
      */
-    public getStaticOptions(): Array<BeautifulOption>
+    public setOptions(options: Array<BeautifulOption>): void
     {
-        return Array.from(this.getOptions());    
+        this.options = options;
     }
 
     /**
-     * getCustomTitle
+     * getBeautifulSelect
      */
-    public getCustomTitle(): GroupTitle
+    public getBeautifulSelect(): BeautifulSelect|null
     {
-        return this.customTitle;
+        return this.beautifulSelect;    
     }
+
+    /**
+     * setBeautifulSelect
+     */
+    public setBeautifulSelect(beautiful_select: BeautifulSelect): void
+    {
+        this.beautifulSelect = beautiful_select;
+    }
+    
+    /**
+     * getGroup
+     */
+    public getGroup(): HTMLOptGroupElement
+    {
+        return this.originalGroup;    
+    }
+
+    /**
+     * add
+     */
+    public add(option: BeautifulOption): void
+    {
+        this.options.push(option);
+    }
+
+    /**
+     * build
+     */
+    public async build(): Promise<BeautifulGroup>
+    {
+        await Promise.all(
+            Array.from(this.originalGroup.children).map(
+                (child: Element): void => {
+                    if (child instanceof HTMLOptionElement)
+                    {
+                        this.options.push(new BeautifulOption(child));
+                    }
+                }
+            )
+        );
+        
+        return this;
+    }
+
+    /**
+     * refresh
+     */
+    public async refresh(): Promise<void>
+    {
+        await Promise.all(
+            this.options.map(
+                (option: BeautifulOption): void => {
+                    option.build();
+                }
+            )
+        );
+    }
+
+    /**
+     * getValues
+     */
+    public async getValues(): Promise<Array<string>>
+    {
+        const VALUES: Array<string> = [];
+
+        await Promise.all(
+            this.options.map(
+                (option: BeautifulOption): void => {
+                    if (option.getActive())
+                    {
+                        VALUES.push(option.getValue());
+                    }
+                }
+            )
+        );
+
+        return VALUES;
+    }
+
+    /**
+     * getActiveContents
+     */
+    public async getActiveContents(): Promise<Array<string>>
+    {
+        const CONTENTS: Array<string> = [];
+
+        await Promise.all(
+            this.options.map(
+                (option: BeautifulOption): void => {
+                    if (option.getActive())
+                    {
+                        CONTENTS.push(option.getContent());
+                    }
+                }
+            )
+        );
+
+        return CONTENTS;
+    }
+
 }
 
-customElements.define("beautiful-group", BeautifulGroup, { extends: "optgroup"} );
+customElements.define("beautiful-group", BeautifulGroup);

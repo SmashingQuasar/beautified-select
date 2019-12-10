@@ -1,19 +1,33 @@
 ﻿<!DOCTYPE html>
 
 <html lang="fr">
+
 <head>
 	<meta charset="UTF-8" />
 	<title>Beautified Select</title>
 	<link rel="stylesheet" type="text/css" href="submodules/reset-css/reset.css" />
-	<link rel="stylesheet" type="text/css" href="style/style.css" />
-	<link rel="stylesheet" type="text/css" href="style/demo.css" />
-	<script type="text/javascript" defer src="javascript/beautified-select.js"></script>
+	<link rel="stylesheet" type="text/css" href="build/css/style.min.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="style/demo.css" /> -->
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifiedSelect.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifulSelect.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifulTitle.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifulList.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifulGroup.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/Model/BeautifulOption.js"></script>
+	<script type="text/javascript" type="module" defer src="build/javascript/general/main.js"></script>
 </head>
+
 <body>
-	<form>
-		
-		<beautified-select>
-			<select name="zero_select" data-placeholder="Please select a value">
+
+	<header>
+		<h1>Beautified Select</h1>
+	</header>
+
+	<main>
+		<section>
+			<h2>Basic example</h2>
+			
+			<select name="basic">
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -23,45 +37,13 @@
 				<option value="usa">United States of America</option>
 				<option value="productInformation">Information about our products</option>
 			</select>
-		</beautified-select>
-		
-		<beautified-select>
-			<select name="first_select" data-placeholder="Please select a value" data-reset size="6" data-autocomplete="true">
-				<optgroup label="Vehicles">
-					<option value="car" label="Audi">Car</option>
-					<option disabled value="truck">Truck</option>
-				</optgroup>
-				<optgroup disabled label="Fruits">
-					<option value="apple">Apple</option>
-					<option value="banana">Banana</option>
-				</optgroup>
-				<optgroup label="Animals">
-					<option value="turtle">Turtle</option>
-				</optgroup>
-				<optgroup label="Regions">
-					<option value="africa">Africa</option>
-					<option value="usa">United States of America</option>
-				</optgroup>
-				<option value="productInformation">Information about our products</option>
-			</select>
-		</beautified-select>
+	
+		</section>
 
-		<beautified-select>
-			<select multiple name="second_select" data-placeholder="Please select a value" size="4" data-reset="true" disabled>
-				<option value="car" selected>Car</option>
-				<option value="truck">Truck</option>
-				<option value="apple">Apple</option>
-				<option value="banana">Banana</option>
-				<option value="turtle">Turtle</option>
-				<option value="africa">Africa</option>
-				<option value="usa">United States of America</option>
-				<option value="productInformation">Information about our products</option>
-			</select>
-		</beautified-select>
+		<section>
+			<h2>Multiple select example</h2>
 
-		<beautified-select>
-			<select name="third_select" data-placeholder="Please select a value">
-				<option disabled></option>
+			<select name="multiple">
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -71,10 +53,13 @@
 				<option value="usa">United States of America</option>
 				<option value="productInformation">Information about our products</option>
 			</select>
-		</beautified-select>
+			
+		</section>
 
-		<beautified-select>
-			<select name="fourth_select" data-placeholder="Please select a value" data-reset="true" data-autocomplete="true">
+		<section>
+			<h3>Placeholder example</h3>
+			
+			<select name="values_03" multiple>
 				<option value="car">Car</option>
 				<option value="truck">Truck</option>
 				<option value="apple">Apple</option>
@@ -84,21 +69,10 @@
 				<option value="usa">United States of America</option>
 				<option value="productInformation">Information about our products</option>
 			</select>
-		</beautified-select>
+	
+		</section>
+	</main>
 
-		<beautified-select>
-			<select multiple name="fifth_select" data-placeholder="Please select a value" size="4" data-reset="true" data-autocomplete="true">
-				<option value="" selected disabled>Select a value</option>
-				<option value="car">Car</option>
-				<option value="truck">Truck</option>
-				<option value="apple">Apple</option>
-				<option value="banana">Banana</option>
-				<option value="turtle">Turtle</option>
-				<option value="africa">Africa</option>
-				<option value="usa">United States of America</option>
-				<option value="productInformation">Information about our products</option>
-			</select>
-		</beautified-select>
-	</form>
 </body>
+
 </html>

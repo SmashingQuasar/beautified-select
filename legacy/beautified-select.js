@@ -129,22 +129,22 @@
 
     function beautify_select(select)
     {
-        let wrapper = select.closest("beautified-select");
+        // let wrapper = select.closest("beautified-select");
 
-        // Handling incorrect select configuration.
+        // // Handling incorrect select configuration.
 
-        if (!wrapper)
-        {
-            throw new Error("Couldn't beautify select since it is not child of a <beautified-select> tag.");
-            return false;
-        }
+        // if (!wrapper)
+        // {
+        //     throw new Error("Couldn't beautify select since it is not child of a <beautified-select> tag.");
+        //     return false;
+        // }
 
-        select.hidden = true;
+        // select.hidden = true;
 
-        if (select.multiple)
-        {
-            wrapper.classList.add("css_multiple");
-        }
+        // if (select.multiple)
+        // {
+        //     wrapper.classList.add("css_multiple");
+        // }
         const form = select.closest("form");
 
         if (form)
@@ -152,18 +152,18 @@
             form.reset();
         }
 
-        let default_option;
+        // let default_option;
 
-        Array.prototype.forEach.call(
-            select.options,
-            function (option)
-            {
-                if (!default_option)
-                {
-                    default_option = option.defaultSelected ? option : null;
-                }
-            }
-        );
+        // Array.prototype.forEach.call(
+        //     select.options,
+        //     function (option)
+        //     {
+        //         if (!default_option)
+        //         {
+        //             default_option = option.defaultSelected ? option : null;
+        //         }
+        //     }
+        // );
 
         const beautiful_title = template_title.cloneNode();
         beautiful_title.tabIndex = select.tabIndex ? select.tabIndex : 0;
