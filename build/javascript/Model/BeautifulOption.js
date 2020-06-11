@@ -24,7 +24,7 @@ class BeautifulOption extends HTMLElement {
     }
     setContent(content) {
         this.content = content;
-        this.textContent = content;
+        this.innerHTML = content;
     }
     getBeautifulSelect() {
         return this.beautifulSelect;

@@ -60,7 +60,7 @@ class BeautifulOption extends HTMLElement
     public setContent(content: string): void
     {
         this.content = content;
-        this.textContent = content;    
+        this.innerHTML = content;    
     }
 
     /**
