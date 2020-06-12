@@ -83,11 +83,19 @@ class BeautifulList extends HTMLElement {
         this.style.height = `${this.calculateHeight()}px`;
         this.classList.add("unfolded");
         this.unfolded = true;
+        if (this.beautifulSelect !== null) {
+            const TITLE = this.beautifulSelect.getTitle();
+            TITLE.classList.add("active");
+        }
     }
     hide() {
         this.style.height = "0px";
         this.classList.remove("unfolded");
         this.unfolded = false;
+        if (this.beautifulSelect !== null) {
+            const TITLE = this.beautifulSelect.getTitle();
+            TITLE.classList.remove("active");
+        }
     }
     toggleDisplay() {
         this.unfolded ? this.hide() : this.show();
