@@ -43,7 +43,7 @@ class BeautifulOption extends HTMLElement {
             return;
         }
         const CUSTOM_CHANGE_EVENT = new CustomEvent("change");
-        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+        this.beautifulSelect.dispatchEvent(CUSTOM_CHANGE_EVENT);
         this.beautifulSelect.refreshTitle();
         const LIST = this.beautifulSelect.getList();
         if (LIST === null) {

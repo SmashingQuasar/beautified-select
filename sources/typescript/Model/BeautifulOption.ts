@@ -101,7 +101,7 @@ class BeautifulOption extends HTMLElement
 
         const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
 
-        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+        this.beautifulSelect.dispatchEvent(CUSTOM_CHANGE_EVENT);
         this.beautifulSelect.refreshTitle();
 
         const LIST: BeautifulList|null = this.beautifulSelect.getList();
