@@ -78,7 +78,7 @@ class BeautifulTitle extends HTMLElement
             this.content = VALUES.join(", ");
         }
 
-        this.textContent = this.content;
+        this.innerHTML = this.content;
     }
 }
 

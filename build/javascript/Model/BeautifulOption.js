@@ -43,7 +43,7 @@ class BeautifulOption extends HTMLElement {
             return;
         }
         const CUSTOM_CHANGE_EVENT = new CustomEvent("change");
-        this.beautifulSelect.dispatchEvent(CUSTOM_CHANGE_EVENT);
+        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
         this.beautifulSelect.refreshTitle();
         const LIST = this.beautifulSelect.getList();
         if (LIST === null) {
@@ -87,7 +87,10 @@ class BeautifulOption extends HTMLElement {
     }
     build() {
         this.value = this.originalOption.value;
-        this.setContent(this.originalOption.textContent || "");
+        console.log(this.content === "");
+        if (this.content === "") {
+            this.setContent(this.originalOption.textContent || "");
+        }
         if (this.originalOption.selected) {
             this.active = true;
             this.classList.add("active");

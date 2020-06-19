@@ -36,7 +36,7 @@ class BeautifulTitle extends HTMLElement {
         else {
             this.content = VALUES.join(", ");
         }
-        this.textContent = this.content;
+        this.innerHTML = this.content;
     }
 }
 customElements.define("beautiful-title", BeautifulTitle);
