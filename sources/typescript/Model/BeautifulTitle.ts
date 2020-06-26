@@ -75,7 +75,8 @@ class BeautifulTitle extends HTMLElement
         }
         else
         {
-            this.content = VALUES.join(", ");
+            let active_contents: Array<string> = await this.beautifulSelect.getActiveContents();
+            this.content = active_contents.join(", ");
         }
 
         this.innerHTML = this.content;

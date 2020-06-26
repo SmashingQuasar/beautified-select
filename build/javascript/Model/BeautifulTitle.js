@@ -34,7 +34,8 @@ class BeautifulTitle extends HTMLElement {
             this.content = PLACEHOLDER;
         }
         else {
-            this.content = VALUES.join(", ");
+            let active_contents = await this.beautifulSelect.getActiveContents();
+            this.content = active_contents.join(", ");
         }
         this.innerHTML = this.content;
     }
