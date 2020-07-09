@@ -87,7 +87,6 @@ class BeautifulOption extends HTMLElement {
     }
     build() {
         this.value = this.originalOption.value;
-        console.log(this.content === "");
         if (this.content === "") {
             this.setContent(this.originalOption.textContent || "");
         }
