@@ -184,7 +184,8 @@ class BeautifulOption extends HTMLElement
     public build(): void
     {
         this.value = this.originalOption.value;
-
+        this.hidden = this.originalOption.hidden;
+        
         if (this.content === "")
         {
             this.setContent(this.originalOption.textContent || "");
