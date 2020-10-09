@@ -1,15 +1,14 @@
-"use strict";
 class BeautifulTitle extends HTMLElement {
     constructor() {
         super();
-        this.beautifulSelect = null;
         this.content = "";
+        this.NULL_LENGTH = 0;
         this.addEventListener("click", () => {
-            if (this.beautifulSelect === null) {
+            if (this.beautifulSelect === undefined) {
                 return;
             }
             const LIST = this.beautifulSelect.getList();
-            if (LIST === null) {
+            if (LIST === undefined) {
                 return;
             }
             LIST.toggleDisplay();
@@ -25,19 +24,20 @@ class BeautifulTitle extends HTMLElement {
         this.beautifulSelect = beautiful_select;
     }
     async refresh() {
-        if (this.beautifulSelect === null) {
+        if (this.beautifulSelect === undefined) {
             return;
         }
         const VALUES = await this.beautifulSelect.getActiveContents();
         const PLACEHOLDER = this.beautifulSelect.getPlaceholder();
-        if (VALUES.length === 0 && PLACEHOLDER !== null) {
+        if (VALUES.length === this.NULL_LENGTH && PLACEHOLDER !== undefined) {
             this.content = PLACEHOLDER;
         }
         else {
-            let active_contents = await this.beautifulSelect.getActiveContents();
-            this.content = active_contents.join(", ");
+            const ACTIVE_CONTENTS = await this.beautifulSelect.getActiveContents();
+            this.content = ACTIVE_CONTENTS.join(", ");
         }
         this.innerHTML = this.content;
     }
 }
 customElements.define("beautiful-title", BeautifulTitle);
+export { BeautifulTitle };

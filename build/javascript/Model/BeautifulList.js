@@ -1,11 +1,12 @@
-"use strict";
+import { BeautifulOption } from "./BeautifulOption.js";
 class BeautifulList extends HTMLElement {
     constructor() {
         super();
-        this.beautifulSelect = null;
         this.options = [];
         this.groups = [];
         this.unfolded = false;
+        this.NULL_HEIGHT = 0;
+        this.NULL_LENGTH = 0;
         document.addEventListener("click", (event) => {
             const TARGET = event.target;
             if (!(TARGET instanceof HTMLElement)) {
@@ -56,14 +57,14 @@ class BeautifulList extends HTMLElement {
         }));
     }
     calculateHeight() {
-        if (this.beautifulSelect === null) {
-            return 0;
+        if (this.beautifulSelect === undefined) {
+            return this.NULL_HEIGHT;
         }
         return this.calculateAverageHeight() * this.beautifulSelect.getDisplayedOptions();
     }
     calculateAverageHeight() {
-        if (this.options.length === 0) {
-            return 0;
+        if (this.options.length === this.NULL_LENGTH) {
+            return this.NULL_HEIGHT;
         }
         let total_height = 0;
         let total_options = 0;
@@ -74,8 +75,8 @@ class BeautifulList extends HTMLElement {
                 ++total_options;
             }
         });
-        if (total_options === 0) {
-            return 0;
+        if (total_options === this.NULL_LENGTH) {
+            return this.NULL_LENGTH;
         }
         return total_height / total_options;
     }
@@ -83,7 +84,7 @@ class BeautifulList extends HTMLElement {
         this.style.height = `${this.calculateHeight()}px`;
         this.classList.add("unfolded");
         this.unfolded = true;
-        if (this.beautifulSelect !== null) {
+        if (this.beautifulSelect !== undefined) {
             const TITLE = this.beautifulSelect.getTitle();
             TITLE.classList.add("active");
         }
@@ -92,20 +93,25 @@ class BeautifulList extends HTMLElement {
         this.style.height = "0px";
         this.classList.remove("unfolded");
         this.unfolded = false;
-        if (this.beautifulSelect !== null) {
+        if (this.beautifulSelect !== undefined) {
             const TITLE = this.beautifulSelect.getTitle();
             TITLE.classList.remove("active");
         }
     }
     toggleDisplay() {
-        this.unfolded ? this.hide() : this.show();
+        if (this.unfolded) {
+            this.hide();
+        }
+        else {
+            this.show();
+        }
     }
     async refresh() {
-        await Promise.all(this.options.map((option) => {
-            option.build();
+        await Promise.all(this.options.map(async (option) => {
+            return option.build();
         }));
-        await Promise.all(this.groups.map((group) => {
-            group.refresh();
+        await Promise.all(this.groups.map(async (group) => {
+            return group.refresh();
         }));
     }
     async getValues() {
@@ -134,3 +140,4 @@ class BeautifulList extends HTMLElement {
     }
 }
 customElements.define("beautiful-list", BeautifulList);
+export { BeautifulList };

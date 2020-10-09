@@ -1,3 +1,5 @@
+import { BeautifiedSelect } from "../Model/BeautifiedSelect.js";
+
 const SELECTS: NodeListOf<HTMLSelectElement> = document.querySelectorAll("select");
 
 Array.from(SELECTS).forEach(

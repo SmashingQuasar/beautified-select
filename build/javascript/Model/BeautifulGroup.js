@@ -1,10 +1,9 @@
-"use strict";
+import { BeautifulOption } from "./BeautifulOption.js";
 class BeautifulGroup extends HTMLElement {
     constructor(group) {
         super();
-        this.beautifulSelect = null;
         this.options = [];
-        this.originalGroup = group;
+        this.ORIGINAL_GROUP = group;
     }
     getOptions() {
         return this.options;
@@ -19,13 +18,13 @@ class BeautifulGroup extends HTMLElement {
         this.beautifulSelect = beautiful_select;
     }
     getGroup() {
-        return this.originalGroup;
+        return this.ORIGINAL_GROUP;
     }
     add(option) {
         this.options.push(option);
     }
     async build() {
-        await Promise.all(Array.from(this.originalGroup.children).map((child) => {
+        await Promise.all(Array.from(this.ORIGINAL_GROUP.children).map((child) => {
             if (child instanceof HTMLOptionElement) {
                 this.options.push(new BeautifulOption(child));
             }
@@ -33,14 +32,14 @@ class BeautifulGroup extends HTMLElement {
         return this;
     }
     async refresh() {
-        await Promise.all(this.options.map((option) => {
-            option.build();
+        await Promise.all(this.options.map(async (option) => {
+            return option.build();
         }));
     }
     async getValues() {
         const VALUES = [];
         await Promise.all(this.options.map((option) => {
-            if (option.getActive()) {
+            if (option.getActive() === true) {
                 VALUES.push(option.getValue());
             }
         }));
@@ -57,3 +56,4 @@ class BeautifulGroup extends HTMLElement {
     }
 }
 customElements.define("beautiful-group", BeautifulGroup);
+export { BeautifulGroup };

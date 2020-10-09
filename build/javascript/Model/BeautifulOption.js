@@ -1,14 +1,16 @@
-"use strict";
 class BeautifulOption extends HTMLElement {
     constructor(option) {
         super();
-        this.beautifulSelect = null;
         this.active = false;
         this.value = "";
         this.content = "";
         this.originalOption = option;
-        this.build();
-        this.addEventListener("click", this.toggleActivation);
+        this.build().then(() => {
+            console.info("Beautiful Option successfully built.");
+        }, (error) => {
+            console.error(`Error occurred while refreshing Beautiful Option: ${error.message}`);
+        });
+        this.addEventListener("click", this.toggleActivation.bind(this));
     }
     getActive() {
         return this.active;
@@ -32,72 +34,77 @@ class BeautifulOption extends HTMLElement {
     setBeautifulSelect(beautiful_select) {
         this.beautifulSelect = beautiful_select;
     }
-    activate() {
+    async activate() {
         this.active = true;
         this.classList.add("active");
-        if (this.originalOption === null) {
+        if (this.originalOption === undefined) {
             return;
         }
         this.originalOption.selected = true;
-        if (this.beautifulSelect === null) {
+        if (this.beautifulSelect === undefined) {
             return;
         }
         const CUSTOM_CHANGE_EVENT = new CustomEvent("change");
         this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
-        this.beautifulSelect.refreshTitle();
+        await this.beautifulSelect.refreshTitle();
         const LIST = this.beautifulSelect.getList();
-        if (LIST === null) {
+        if (LIST === undefined) {
             return;
         }
         if (this.beautifulSelect.getMultiple() === false) {
             LIST.hide();
         }
     }
-    deactivate() {
+    async deactivate() {
         this.active = false;
         this.classList.remove("active");
-        if (this.originalOption === null) {
+        if (this.originalOption === undefined) {
             return;
         }
         this.originalOption.selected = false;
-        if (this.beautifulSelect === null) {
+        if (this.beautifulSelect === undefined) {
             return;
         }
         const CUSTOM_CHANGE_EVENT = new CustomEvent("change");
         this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
-        this.beautifulSelect.refreshTitle();
+        await this.beautifulSelect.refreshTitle();
         const LIST = this.beautifulSelect.getList();
-        if (LIST === null) {
+        if (LIST === undefined) {
             return;
         }
         if (this.beautifulSelect.getMultiple() === false) {
             LIST.hide();
         }
     }
-    toggleActivation() {
-        if (this.beautifulSelect !== null) {
-            if (this.beautifulSelect.getMultiple()) {
-                this.active ? this.deactivate() : this.activate();
+    async toggleActivation() {
+        if (this.beautifulSelect !== undefined) {
+            if (this.beautifulSelect.getMultiple() && this.active) {
+                await this.deactivate();
             }
             else {
-                this.activate();
+                await this.activate();
             }
         }
         return this.active;
     }
-    build() {
+    async build() {
         this.value = this.originalOption.value;
         this.hidden = this.originalOption.hidden;
         if (this.content === "") {
-            this.setContent(this.originalOption.textContent || "");
+            if (typeof this.originalOption.textContent === "string") {
+                this.setContent(this.originalOption.textContent);
+            }
+            else {
+                this.setContent("");
+            }
         }
         if (this.originalOption.selected) {
             this.active = true;
             this.classList.add("active");
-            if (this.beautifulSelect === null) {
+            if (this.beautifulSelect === undefined) {
                 return;
             }
-            this.beautifulSelect.refreshTitle();
+            await this.beautifulSelect.refreshTitle();
         }
         else {
             this.active = false;
@@ -106,3 +113,4 @@ class BeautifulOption extends HTMLElement {
     }
 }
 customElements.define("beautiful-option", BeautifulOption);
+export { BeautifulOption };

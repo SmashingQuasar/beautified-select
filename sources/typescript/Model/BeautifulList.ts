@@ -1,9 +1,16 @@
+import { BeautifulGroup } from "./BeautifulGroup.js";
+import { BeautifulSelect } from "./BeautifulSelect.js";
+import { BeautifulOption } from "./BeautifulOption.js";
+import { BeautifulTitle } from "./BeautifulTitle.js";
+
 class BeautifulList extends HTMLElement
 {
-    private beautifulSelect: BeautifulSelect|null = null;
+    private beautifulSelect: BeautifulSelect|undefined;
     private options: Array<BeautifulOption> = [];
     private groups: Array<BeautifulGroup> = [];
     private unfolded: boolean = false;
+    private readonly NULL_HEIGHT: number = 0;
+    private readonly NULL_LENGTH: number = 0;
 
     /**
      * constructor
@@ -68,9 +75,9 @@ class BeautifulList extends HTMLElement
     /**
      * getBeautifulSelect
      */
-    public getBeautifulSelect(): BeautifulSelect|null
+    public getBeautifulSelect(): BeautifulSelect|undefined
     {
-        return this.beautifulSelect;    
+        return this.beautifulSelect;
     }
 
     /**
@@ -80,15 +87,15 @@ class BeautifulList extends HTMLElement
     {
         this.beautifulSelect = beautiful_select;
     }
-    
+
     /**
      * getUnfolded
      */
     public getUnfolded(): boolean
     {
-        return this.unfolded;    
+        return this.unfolded;
     }
-    
+
     /**
      * add
      */
@@ -128,11 +135,11 @@ class BeautifulList extends HTMLElement
      */
     public calculateHeight(): number
     {
-        if (this.beautifulSelect === null)
+        if (this.beautifulSelect === undefined)
         {
-            return 0;
+            return this.NULL_HEIGHT;
         }
-        
+
         return this.calculateAverageHeight() * this.beautifulSelect.getDisplayedOptions();
     }
 
@@ -141,11 +148,11 @@ class BeautifulList extends HTMLElement
      */
     public calculateAverageHeight(): number
     {
-        if (this.options.length === 0)
+        if (this.options.length === this.NULL_LENGTH)
         {
-            return 0;
+            return this.NULL_HEIGHT;
         }
-        
+
         let total_height: number = 0;
         let total_options: number = 0;
 
@@ -154,17 +161,17 @@ class BeautifulList extends HTMLElement
                 if (option.getValue())
                 {
                     const OPTION_RECT: ClientRect|DOMRect = option.getBoundingClientRect();
-                    
+
                     total_height += OPTION_RECT.height;
                     ++total_options;
                 }
-                
+
             }
         );
 
-        if (total_options === 0)
+        if (total_options === this.NULL_LENGTH)
         {
-            return 0;
+            return this.NULL_LENGTH;
         }
 
         return total_height/total_options;
@@ -179,14 +186,14 @@ class BeautifulList extends HTMLElement
         this.classList.add("unfolded");
         this.unfolded = true;
 
-        if (this.beautifulSelect !== null)
+        if (this.beautifulSelect !== undefined)
         {
             const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
             TITLE.classList.add("active");
         }
 
     }
-    
+
     /**
      * hide
      */
@@ -195,8 +202,8 @@ class BeautifulList extends HTMLElement
         this.style.height = "0px";
         this.classList.remove("unfolded");
         this.unfolded = false;
-        
-        if (this.beautifulSelect !== null)
+
+        if (this.beautifulSelect !== undefined)
         {
             const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
             TITLE.classList.remove("active");
@@ -208,7 +215,14 @@ class BeautifulList extends HTMLElement
      */
     public toggleDisplay(): void
     {
-        this.unfolded ? this.hide() : this.show();
+        if (this.unfolded)
+        {
+            this.hide();
+        }
+        else
+        {
+            this.show();
+        }
     }
 
     /**
@@ -218,15 +232,15 @@ class BeautifulList extends HTMLElement
     {
         await Promise.all(
             this.options.map(
-                (option: BeautifulOption): void => {
-                    option.build();
+                async(option: BeautifulOption): Promise<void> => {
+                    return option.build();
                 }
             )
         );
         await Promise.all(
             this.groups.map(
-                (group: BeautifulGroup): void => {
-                    group.refresh();
+                async(group: BeautifulGroup): Promise<void> => {
+                    return group.refresh();
                 }
             )
         );
@@ -252,7 +266,7 @@ class BeautifulList extends HTMLElement
 
         await Promise.all(
             this.groups.map(
-                async (group: BeautifulGroup): Promise<void> => {
+                async(group: BeautifulGroup): Promise<void> => {
                     values = values.concat(await group.getValues());
                 }
             )
@@ -281,7 +295,7 @@ class BeautifulList extends HTMLElement
 
         await Promise.all(
             this.groups.map(
-                async (group: BeautifulGroup): Promise<void> => {
+                async(group: BeautifulGroup): Promise<void> => {
                     contents = contents.concat(await group.getActiveContents());
                 }
             )
@@ -292,3 +306,5 @@ class BeautifulList extends HTMLElement
 }
 
 customElements.define("beautiful-list", BeautifulList);
+
+export { BeautifulList };

@@ -1,30 +1,36 @@
-"use strict";
+import { BeautifulList } from "./BeautifulList.js";
+import { BeautifulGroup } from "./BeautifulGroup.js";
+import { BeautifulOption } from "./BeautifulOption.js";
+import { BeautifulTitle } from "./BeautifulTitle.js";
 class BeautifulSelect extends HTMLElement {
     constructor(select, configuration) {
         super();
         this.multiple = false;
-        this.placeholder = null;
-        this.displayedOptions = 3;
+        this.DISPLAYED_OPTION = 3;
         if (configuration !== undefined) {
             if (configuration.placeholder !== undefined) {
-                this.placeholder = configuration.placeholder;
+                this.PLACEHOLDER = configuration.placeholder;
             }
             if (configuration.displayedOptions !== undefined) {
-                this.displayedOptions = configuration.displayedOptions;
+                this.DISPLAYED_OPTION = configuration.displayedOptions;
             }
         }
-        this.originalSelect = select;
-        this.originalSelect.addEventListener("change", this.refresh.bind(this));
+        this.ORIGINAL_SELECT = select;
+        this.ORIGINAL_SELECT.addEventListener("change", this.refresh.bind(this));
         this.beautifulTitle = new BeautifulTitle();
         this.appendChild(this.beautifulTitle);
         this.beautifulTitle.setBeautifulSelect(this);
         this.list = new BeautifulList();
         this.appendChild(this.list);
         this.list.setBeautifulSelect(this);
-        this.beautifulTitle.refresh();
+        this.beautifulTitle.refresh().then(() => {
+            console.info("Beautiful Title successfully refreshed.");
+        }, (error) => {
+            console.error(`Error occurred while refreshing Beautiful Title: ${error.message}`);
+        });
     }
     getDisplayedOptions() {
-        return this.displayedOptions;
+        return this.DISPLAYED_OPTION;
     }
     getTitle() {
         return this.beautifulTitle;
@@ -39,23 +45,18 @@ class BeautifulSelect extends HTMLElement {
         this.list = list;
     }
     getPlaceholder() {
-        return this.placeholder;
+        return this.PLACEHOLDER;
     }
     getOriginalSelect() {
-        return this.originalSelect;
+        return this.ORIGINAL_SELECT;
     }
     getMultiple() {
         return this.multiple;
     }
     async build() {
-        if (this.originalSelect === null) {
-            this.multiple = false;
-        }
-        else {
-            this.multiple = this.originalSelect.multiple;
-        }
-        this.list.clean();
-        await Promise.all(Array.from(this.originalSelect.children).map((children) => {
+        this.multiple = this.ORIGINAL_SELECT.multiple;
+        await this.list.clean();
+        await Promise.all(Array.from(this.ORIGINAL_SELECT.children).map((children) => {
             if (children instanceof HTMLOptionElement) {
                 const OPTION = new BeautifulOption(children);
                 OPTION.setBeautifulSelect(this);
@@ -67,20 +68,21 @@ class BeautifulSelect extends HTMLElement {
                 this.list.add(GROUP);
             }
         }));
-        this.beautifulTitle.refresh();
+        await this.beautifulTitle.refresh();
         return this;
     }
     async refresh() {
         await this.list.refresh();
     }
     async getValues() {
-        return await this.list.getValues();
+        return this.list.getValues();
     }
     async getActiveContents() {
-        return await this.list.getActiveContents();
+        return this.list.getActiveContents();
     }
     async refreshTitle() {
-        return await this.beautifulTitle.refresh();
+        return this.beautifulTitle.refresh();
     }
 }
 customElements.define("beautiful-select", BeautifulSelect);
+export { BeautifulSelect };

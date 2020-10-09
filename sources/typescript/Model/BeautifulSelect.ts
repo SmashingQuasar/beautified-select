@@ -1,11 +1,17 @@
+import { BeautifiedSelectConfiguration } from "../declarations/BeautifiedSelectConfiguration.js";
+import { BeautifulList } from "./BeautifulList.js";
+import { BeautifulGroup } from "./BeautifulGroup.js";
+import { BeautifulOption } from "./BeautifulOption.js";
+import { BeautifulTitle } from "./BeautifulTitle.js";
+
 class BeautifulSelect extends HTMLElement
 {
-    private originalSelect: HTMLSelectElement;
+    private readonly ORIGINAL_SELECT: HTMLSelectElement;
     private beautifulTitle: BeautifulTitle;
     private list: BeautifulList;
     private multiple: boolean = false;
-    private placeholder: string|null = null;
-    private displayedOptions: number = 3;
+    private readonly PLACEHOLDER: string|undefined;
+    private readonly DISPLAYED_OPTION: number = 3;
 
     /**
      * constructor
@@ -20,18 +26,18 @@ class BeautifulSelect extends HTMLElement
         {
             if (configuration.placeholder !== undefined)
             {
-                this.placeholder = configuration.placeholder;
+                this.PLACEHOLDER = configuration.placeholder;
             }
             if (configuration.displayedOptions !== undefined)
             {
-                this.displayedOptions = configuration.displayedOptions;
+                this.DISPLAYED_OPTION = configuration.displayedOptions;
             }
         }
 
         /* Managing vanilla select */
 
-        this.originalSelect = select;
-        this.originalSelect.addEventListener("change", this.refresh.bind(this));
+        this.ORIGINAL_SELECT = select;
+        this.ORIGINAL_SELECT.addEventListener("change", this.refresh.bind(this));
 
         /* Creating title */
 
@@ -40,12 +46,19 @@ class BeautifulSelect extends HTMLElement
         this.beautifulTitle.setBeautifulSelect(this);
 
         /* Creating list */
-        
+
         this.list = new BeautifulList();
         this.appendChild(this.list);
         this.list.setBeautifulSelect(this);
 
-        this.beautifulTitle.refresh();
+        this.beautifulTitle.refresh().then(
+            (): void => {
+                console.info("Beautiful Title successfully refreshed.");
+            },
+            (error: Error): void => {
+                console.error(`Error occurred while refreshing Beautiful Title: ${error.message}`);
+            }
+        );
     }
 
     /**
@@ -53,7 +66,7 @@ class BeautifulSelect extends HTMLElement
      */
     public getDisplayedOptions(): number
     {
-        return this.displayedOptions;
+        return this.DISPLAYED_OPTION;
     }
 
     /**
@@ -61,7 +74,7 @@ class BeautifulSelect extends HTMLElement
      */
     public getTitle(): BeautifulTitle
     {
-        return this.beautifulTitle;    
+        return this.beautifulTitle;
     }
 
     /**
@@ -75,9 +88,9 @@ class BeautifulSelect extends HTMLElement
     /**
      * getList
      */
-    public getList(): BeautifulList|null
+    public getList(): BeautifulList|undefined
     {
-        return this.list;    
+        return this.list;
     }
 
     /**
@@ -85,15 +98,15 @@ class BeautifulSelect extends HTMLElement
      */
     public setList(list: BeautifulList): void
     {
-        this.list = list;   
+        this.list = list;
     }
-    
+
     /**
      * getPlaceholder
      */
-    public getPlaceholder(): string|null
+    public getPlaceholder(): string|undefined
     {
-        return this.placeholder;
+        return this.PLACEHOLDER;
     }
 
     /**
@@ -101,7 +114,7 @@ class BeautifulSelect extends HTMLElement
      */
     public getOriginalSelect(): HTMLSelectElement
     {
-        return this.originalSelect;
+        return this.ORIGINAL_SELECT;
     }
 
     /**
@@ -109,7 +122,7 @@ class BeautifulSelect extends HTMLElement
      */
     public getMultiple(): boolean
     {
-        return this.multiple;    
+        return this.multiple;
     }
 
     /**
@@ -117,19 +130,12 @@ class BeautifulSelect extends HTMLElement
      */
     public async build(): Promise<BeautifulSelect>
     {
-        if (this.originalSelect === null)
-        {
-            this.multiple = false;
-        }
-        else
-        {
-            this.multiple = this.originalSelect.multiple;
-        }
+        this.multiple = this.ORIGINAL_SELECT.multiple;
 
-        this.list.clean();
-        
+        await this.list.clean();
+
         await Promise.all(
-            Array.from(this.originalSelect.children).map(
+            Array.from(this.ORIGINAL_SELECT.children).map(
                 (children: Element): void => {
                     if (children instanceof HTMLOptionElement)
                     {
@@ -146,8 +152,8 @@ class BeautifulSelect extends HTMLElement
                 }
             )
         );
-        
-        this.beautifulTitle.refresh();
+
+        await this.beautifulTitle.refresh();
 
         return this;
     }
@@ -165,7 +171,7 @@ class BeautifulSelect extends HTMLElement
      */
     public async getValues(): Promise<Array<string>>
     {
-        return await this.list.getValues();
+        return this.list.getValues();
     }
 
     /**
@@ -173,7 +179,7 @@ class BeautifulSelect extends HTMLElement
      */
     public async getActiveContents(): Promise<Array<string>>
     {
-        return await this.list.getActiveContents();
+        return this.list.getActiveContents();
     }
 
     /**
@@ -181,9 +187,11 @@ class BeautifulSelect extends HTMLElement
      */
     public async refreshTitle(): Promise<void>
     {
-        return await this.beautifulTitle.refresh();
+        return this.beautifulTitle.refresh();
     }
 
 }
 
 customElements.define("beautiful-select", BeautifulSelect);
+
+export { BeautifulSelect };

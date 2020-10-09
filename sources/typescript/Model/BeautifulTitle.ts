@@ -1,7 +1,11 @@
+import { BeautifulSelect } from "./BeautifulSelect.js";
+import { BeautifulList } from "./BeautifulList.js";
+
 class BeautifulTitle extends HTMLElement
 {
-    private beautifulSelect: BeautifulSelect|null = null;
+    private beautifulSelect: BeautifulSelect|undefined;
     private content: string = "";
+    private readonly NULL_LENGTH: number = 0;
 
     /**
      * constructor
@@ -14,18 +18,18 @@ class BeautifulTitle extends HTMLElement
             "click",
             (): void =>
             {
-                if (this.beautifulSelect === null)
+                if (this.beautifulSelect === undefined)
                 {
                     return;
                 }
 
-                const LIST: BeautifulList|null = this.beautifulSelect.getList();
+                const LIST: BeautifulList|undefined = this.beautifulSelect.getList();
 
-                if (LIST === null)
+                if (LIST === undefined)
                 {
                     return;
                 }
-                
+
                 LIST.toggleDisplay();
             }
         );
@@ -36,16 +40,16 @@ class BeautifulTitle extends HTMLElement
      */
     public getContent(): string
     {
-        return this.content;    
+        return this.content;
     }
 
 
     /**
      * getBeautifulSelect
      */
-    public getBeautifulSelect(): BeautifulSelect|null
+    public getBeautifulSelect(): BeautifulSelect|undefined
     {
-        return this.beautifulSelect;    
+        return this.beautifulSelect;
     }
 
     /**
@@ -55,28 +59,28 @@ class BeautifulTitle extends HTMLElement
     {
         this.beautifulSelect = beautiful_select;
     }
-    
+
     /**
      * refresh
      */
     public async refresh(): Promise<void>
     {
-        if (this.beautifulSelect === null)
+        if (this.beautifulSelect === undefined)
         {
             return;
         }
 
         const VALUES: Array<string> = await this.beautifulSelect.getActiveContents();
-        const PLACEHOLDER: string|null = this.beautifulSelect.getPlaceholder();
-        
-        if (VALUES.length === 0 && PLACEHOLDER !== null)
+        const PLACEHOLDER: string|undefined = this.beautifulSelect.getPlaceholder();
+
+        if (VALUES.length === this.NULL_LENGTH && PLACEHOLDER !== undefined)
         {
             this.content = PLACEHOLDER;
         }
         else
         {
-            let active_contents: Array<string> = await this.beautifulSelect.getActiveContents();
-            this.content = active_contents.join(", ");
+            const ACTIVE_CONTENTS: Array<string> = await this.beautifulSelect.getActiveContents();
+            this.content = ACTIVE_CONTENTS.join(", ");
         }
 
         this.innerHTML = this.content;
@@ -84,3 +88,5 @@ class BeautifulTitle extends HTMLElement
 }
 
 customElements.define("beautiful-title", BeautifulTitle);
+
+export { BeautifulTitle };

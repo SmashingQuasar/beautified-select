@@ -1,7 +1,10 @@
+import { BeautifulSelect } from "./BeautifulSelect.js";
+import { BeautifulOption } from "./BeautifulOption.js";
+
 class BeautifulGroup extends HTMLElement
 {
-    private beautifulSelect: BeautifulSelect|null = null;
-    private originalGroup: HTMLOptGroupElement;
+    private beautifulSelect: BeautifulSelect|undefined;
+    private readonly ORIGINAL_GROUP: HTMLOptGroupElement;
     private options: Array<BeautifulOption> = [];
 
     /**
@@ -11,7 +14,7 @@ class BeautifulGroup extends HTMLElement
     {
         super();
 
-        this.originalGroup = group;
+        this.ORIGINAL_GROUP = group;
     }
 
     /**
@@ -33,9 +36,9 @@ class BeautifulGroup extends HTMLElement
     /**
      * getBeautifulSelect
      */
-    public getBeautifulSelect(): BeautifulSelect|null
+    public getBeautifulSelect(): BeautifulSelect|undefined
     {
-        return this.beautifulSelect;    
+        return this.beautifulSelect;
     }
 
     /**
@@ -45,13 +48,13 @@ class BeautifulGroup extends HTMLElement
     {
         this.beautifulSelect = beautiful_select;
     }
-    
+
     /**
      * getGroup
      */
     public getGroup(): HTMLOptGroupElement
     {
-        return this.originalGroup;    
+        return this.ORIGINAL_GROUP;
     }
 
     /**
@@ -68,7 +71,7 @@ class BeautifulGroup extends HTMLElement
     public async build(): Promise<BeautifulGroup>
     {
         await Promise.all(
-            Array.from(this.originalGroup.children).map(
+            Array.from(this.ORIGINAL_GROUP.children).map(
                 (child: Element): void => {
                     if (child instanceof HTMLOptionElement)
                     {
@@ -77,7 +80,7 @@ class BeautifulGroup extends HTMLElement
                 }
             )
         );
-        
+
         return this;
     }
 
@@ -88,8 +91,8 @@ class BeautifulGroup extends HTMLElement
     {
         await Promise.all(
             this.options.map(
-                (option: BeautifulOption): void => {
-                    option.build();
+                async(option: BeautifulOption): Promise<void> => {
+                    return option.build();
                 }
             )
         );
@@ -105,7 +108,7 @@ class BeautifulGroup extends HTMLElement
         await Promise.all(
             this.options.map(
                 (option: BeautifulOption): void => {
-                    if (option.getActive())
+                    if (option.getActive() === true)
                     {
                         VALUES.push(option.getValue());
                     }
@@ -140,3 +143,5 @@ class BeautifulGroup extends HTMLElement
 }
 
 customElements.define("beautiful-group", BeautifulGroup);
+
+export { BeautifulGroup };
