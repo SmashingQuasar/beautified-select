@@ -14,7 +14,7 @@ Happy linting! 💖
 {
     "env": {
         "browser": true,
-        "es6": true
+        "esnext": true
     },
     "extends": [
         "eslint:recommended",

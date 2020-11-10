@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"outDir": "build/javascript",
 		"allowJs": false,
-		"target": "esnext",
+		"target": "es2017",
 		"lib": ["dom", "es7"],
 		"alwaysStrict": true,
 		"removeComments": true,
@@ -17,9 +17,13 @@
 		"allowUnreachableCode": false,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"newLine": "LF"
+		"newLine": "LF",
+		"module": "ES2015",
+		"sourceMap": true,
+		"esModuleInterop": true
 	},
 	"include": [
-		"sources/typescript"
+		"sources/typescript",
+		"test/"
 	]
 }
