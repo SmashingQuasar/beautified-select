@@ -16,8 +16,9 @@ class BeautifulTitle extends HTMLElement
 
         this.addEventListener(
             "click",
-            (): void =>
+            (event: Event): void =>
             {
+                event.preventDefault();
                 if (this.beautifulSelect === undefined)
                 {
                     return;

@@ -171,8 +171,9 @@ class BeautifulOption extends HTMLElement
     /**
      * toggleActivation
      */
-    public async toggleActivation(): Promise<boolean>
+    public async toggleActivation(event: Event): Promise<boolean>
     {
+        event.preventDefault();
         if (this.beautifulSelect !== undefined)
         {
             if (this.beautifulSelect.getMultiple() && this.active)
