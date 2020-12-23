@@ -40,6 +40,8 @@ class BeautifulTitle extends HTMLElement {
         this.innerHTML = this.content;
     }
 }
-customElements.define("beautiful-title", BeautifulTitle);
+if (customElements.get("beautiful-title") === undefined) {
+    customElements.define("beautiful-title", BeautifulTitle);
+}
 export { BeautifulTitle };
 //# sourceMappingURL=BeautifulTitle.js.map

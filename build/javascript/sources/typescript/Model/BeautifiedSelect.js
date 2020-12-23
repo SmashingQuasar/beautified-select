@@ -48,6 +48,8 @@ class BeautifiedSelect extends HTMLElement {
         return this;
     }
 }
-customElements.define("beautified-select", BeautifiedSelect);
+if (customElements.get("beautified-select") === undefined) {
+    customElements.define("beautified-select", BeautifiedSelect);
+}
 export { BeautifiedSelect };
 //# sourceMappingURL=BeautifiedSelect.js.map

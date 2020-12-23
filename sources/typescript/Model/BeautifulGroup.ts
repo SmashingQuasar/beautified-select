@@ -142,6 +142,9 @@ class BeautifulGroup extends HTMLElement
 
 }
 
-customElements.define("beautiful-group", BeautifulGroup);
+if (customElements.get("beautiful-group") === undefined)
+{
+    customElements.define("beautiful-group", BeautifulGroup);
+}
 
 export { BeautifulGroup };

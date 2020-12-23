@@ -103,6 +103,9 @@ class BeautifiedSelect extends HTMLElement
 
 }
 
-customElements.define("beautified-select", BeautifiedSelect);
+if (customElements.get("beautified-select") === undefined)
+{
+    customElements.define("beautified-select", BeautifiedSelect);
+}
 
 export { BeautifiedSelect };

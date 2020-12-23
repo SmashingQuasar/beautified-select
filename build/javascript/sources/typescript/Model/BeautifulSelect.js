@@ -84,6 +84,8 @@ class BeautifulSelect extends HTMLElement {
         return this.beautifulTitle.refresh();
     }
 }
-customElements.define("beautiful-select", BeautifulSelect);
+if (customElements.get("beautiful-select") === undefined) {
+    customElements.define("beautiful-select", BeautifulSelect);
+}
 export { BeautifulSelect };
 //# sourceMappingURL=BeautifulSelect.js.map

@@ -139,6 +139,8 @@ class BeautifulList extends HTMLElement {
         return contents;
     }
 }
-customElements.define("beautiful-list", BeautifulList);
+if (customElements.get("beautiful-list") === undefined) {
+    customElements.define("beautiful-list", BeautifulList);
+}
 export { BeautifulList };
 //# sourceMappingURL=BeautifulList.js.map

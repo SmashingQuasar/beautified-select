@@ -88,6 +88,9 @@ class BeautifulTitle extends HTMLElement
     }
 }
 
-customElements.define("beautiful-title", BeautifulTitle);
+if (customElements.get("beautiful-title") === undefined)
+{
+    customElements.define("beautiful-title", BeautifulTitle);
+}
 
 export { BeautifulTitle };

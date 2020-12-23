@@ -113,6 +113,8 @@ class BeautifulOption extends HTMLElement {
         }
     }
 }
-customElements.define("beautiful-option", BeautifulOption);
+if (customElements.get("beautiful-option") === undefined) {
+    customElements.define("beautiful-option", BeautifulOption);
+}
 export { BeautifulOption };
 //# sourceMappingURL=BeautifulOption.js.map

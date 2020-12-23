@@ -55,6 +55,8 @@ class BeautifulGroup extends HTMLElement {
         return CONTENTS;
     }
 }
-customElements.define("beautiful-group", BeautifulGroup);
+if (customElements.get("beautiful-group") === undefined) {
+    customElements.define("beautiful-group", BeautifulGroup);
+}
 export { BeautifulGroup };
 //# sourceMappingURL=BeautifulGroup.js.map

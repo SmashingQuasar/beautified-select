@@ -192,6 +192,9 @@ class BeautifulSelect extends HTMLElement
 
 }
 
-customElements.define("beautiful-select", BeautifulSelect);
+if (customElements.get("beautiful-select") === undefined)
+{
+    customElements.define("beautiful-select", BeautifulSelect);
+}
 
 export { BeautifulSelect };
