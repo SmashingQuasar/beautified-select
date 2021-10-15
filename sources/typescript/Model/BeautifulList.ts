@@ -1,313 +1,330 @@
-import { BeautifulGroup } from "./BeautifulGroup.js";
-import { BeautifulSelect } from "./BeautifulSelect.js";
+import type { BeautifulGroup } from "./BeautifulGroup.js";
+import type { BeautifulSelect } from "./BeautifulSelect.js";
 import { BeautifulOption } from "./BeautifulOption.js";
-import { BeautifulTitle } from "./BeautifulTitle.js";
+import type { BeautifulTitle } from "./BeautifulTitle.js";
 
 class BeautifulList extends HTMLElement
 {
-    private beautifulSelect: BeautifulSelect|undefined;
-    private options: Array<BeautifulOption> = [];
-    private groups: Array<BeautifulGroup> = [];
-    private unfolded: boolean = false;
-    private readonly NULL_HEIGHT: number = 0;
-    private readonly NULL_LENGTH: number = 0;
+	private beautifulSelect: BeautifulSelect|undefined;
+	private options: Array<BeautifulOption> = [];
+	private groups: Array<BeautifulGroup> = [];
+	private unfolded: boolean = false;
+	private readonly nullHeight: number = 0;
+	private readonly nullLength: number = 0;
 
-    /**
-     * constructor
-     */
-    public constructor()
-    {
-        super();
+	/**
+	 * constructor
+	 */
+	public constructor()
+	{
+		super();
 
-        document.addEventListener(
-            "click",
-            (event: MouseEvent): void => {
-                const TARGET: EventTarget|null = event.target;
+		document.addEventListener(
+			"click",
+			(event: MouseEvent): void =>
+			{
+				const TARGET: EventTarget|null = event.target;
 
-                if (!(TARGET instanceof HTMLElement))
-                {
-                    return;
-                }
+				if (!(TARGET instanceof HTMLElement))
+				{
+					return;
+				}
 
-                const BEAUTIFUL_SELECT: BeautifulSelect|Element|null = TARGET.closest("beautiful-select");
+				const BEAUTIFUL_SELECT: BeautifulSelect|Element|null = TARGET.closest("beautiful-select");
 
-                if (BEAUTIFUL_SELECT !== this.beautifulSelect)
-                {
-                    this.hide();
-                }
+				if (BEAUTIFUL_SELECT !== this.beautifulSelect)
+				{
+					this.hide();
+				}
+			}
+		);
+	}
 
-            }
-        );
-    }
+	/**
+	 * getOptions
+	 */
+	public getOptions(): Array<BeautifulOption>
+	{
+		return this.options;
+	}
 
-    /**
-     * getOptions
-     */
-    public getOptions(): Array<BeautifulOption>
-    {
-        return this.options;
-    }
+	/**
+	 * setOptions
+	 */
+	public setOptions(options: Array<BeautifulOption>): void
+	{
+		this.options = options;
+	}
 
-    /**
-     * setOptions
-     */
-    public setOptions(options: Array<BeautifulOption>): void
-    {
-        this.options = options;
-    }
+	/**
+	 * getGroups
+	 */
+	public getGroups(): Array<BeautifulGroup>
+	{
+		return this.groups;
+	}
 
-    /**
-     * getGroups
-     */
-    public getGroups(): Array<BeautifulGroup>
-    {
-        return this.groups;
-    }
+	/**
+	 * setGroups
+	 */
+	public setGroups(groups: Array<BeautifulGroup>): void
+	{
+		this.groups = groups;
+	}
 
-    /**
-     * setGroups
-     */
-    public setGroups(groups: Array<BeautifulGroup>): void
-    {
-        this.groups = groups;
-    }
+	/**
+	 * getBeautifulSelect
+	 */
+	public getBeautifulSelect(): BeautifulSelect|undefined
+	{
+		return this.beautifulSelect;
+	}
 
-    /**
-     * getBeautifulSelect
-     */
-    public getBeautifulSelect(): BeautifulSelect|undefined
-    {
-        return this.beautifulSelect;
-    }
+	/**
+	 * setBeautifulSelect
+	 */
+	public setBeautifulSelect(beautiful_select: BeautifulSelect): void
+	{
+		this.beautifulSelect = beautiful_select;
+	}
 
-    /**
-     * setBeautifulSelect
-     */
-    public setBeautifulSelect(beautiful_select: BeautifulSelect): void
-    {
-        this.beautifulSelect = beautiful_select;
-    }
+	/**
+	 * getUnfolded
+	 */
+	public getUnfolded(): boolean
+	{
+		return this.unfolded;
+	}
 
-    /**
-     * getUnfolded
-     */
-    public getUnfolded(): boolean
-    {
-        return this.unfolded;
-    }
+	/**
+	 * add
+	 */
+	public add(element: BeautifulOption|BeautifulGroup): void
+	{
+		if (element instanceof BeautifulOption)
+		{
+			this.options.push(element);
+			this.appendChild(element);
+		}
+		else
+		{
+			this.groups.push(element);
+			this.appendChild(element);
+		}
+	}
 
-    /**
-     * add
-     */
-    public add(element: BeautifulOption|BeautifulGroup): void
-    {
-        if (element instanceof BeautifulOption)
-        {
-            this.options.push(element);
-            this.appendChild(element);
-        }
-        else
-        {
-            this.groups.push(element);
-            this.appendChild(element);
-        }
-    }
+	/**
+	 * clean
+	 */
+	public async clean(): Promise<void>
+	{
+		this.options = [];
+		this.groups = [];
 
-    /**
-     * clean
-     */
-    public async clean(): Promise<void>
-    {
-        this.options = [];
-        this.groups = [];
+		await Promise.all(
+			Array.from(this.children).map(
+				(child: Element): undefined =>
+				{
+					child.remove();
 
-        await Promise.all(
-            Array.from(this.children).map(
-                (child: Element): void => {
-                    child.remove();
-                }
-            )
-        );
-    }
+					return undefined;
+				}
+			)
+		);
+	}
 
-    /**
-     * calculateHeight
-     */
-    public calculateHeight(): number
-    {
-        if (this.beautifulSelect === undefined)
-        {
-            return this.NULL_HEIGHT;
-        }
+	/**
+	 * calculateHeight
+	 */
+	public calculateHeight(): number
+	{
+		if (this.beautifulSelect === undefined)
+		{
+			return this.nullHeight;
+		}
 
-        return this.calculateAverageHeight() * this.beautifulSelect.getDisplayedOptions();
-    }
+		return this.calculateAverageHeight() * this.beautifulSelect.getDisplayedOptions();
+	}
 
-    /**
-     * calculateAverageHeight
-     */
-    public calculateAverageHeight(): number
-    {
-        if (this.options.length === this.NULL_LENGTH)
-        {
-            return this.NULL_HEIGHT;
-        }
+	/**
+	 * calculateAverageHeight
+	 */
+	public calculateAverageHeight(): number
+	{
+		if (this.options.length === this.nullLength)
+		{
+			return this.nullHeight;
+		}
 
-        let total_height: number = 0;
-        let total_options: number = 0;
+		let total_height: number = 0;
+		let total_options: number = 0;
 
-        this.options.map(
-            (option: BeautifulOption): void => {
-                if (option.getValue())
-                {
-                    const OPTION_RECT: ClientRect|DOMRect = option.getBoundingClientRect();
+		this.options.map(
+			(option: BeautifulOption): undefined =>
+			{
+				if (option.getValue())
+				{
+					const OPTION_RECT: ClientRect|DOMRect = option.getBoundingClientRect();
 
-                    total_height += OPTION_RECT.height;
-                    ++total_options;
-                }
+					total_height += OPTION_RECT.height;
+					++total_options;
+				}
 
-            }
-        );
+				return undefined;
+			}
+		);
 
-        if (total_options === this.NULL_LENGTH)
-        {
-            return this.NULL_LENGTH;
-        }
+		if (total_options === this.nullLength)
+		{
+			return this.nullLength;
+		}
 
-        return total_height/total_options;
-    }
+		return total_height/total_options;
+	}
 
-    /**
-     * show
-     */
-    public show(): void
-    {
-        this.style.height = `${this.calculateHeight()}px`;
-        this.classList.add("unfolded");
-        this.unfolded = true;
+	/**
+	 * show
+	 */
+	public show(): void
+	{
+		this.style.height = `${this.calculateHeight().toString()}px`;
+		this.classList.add("unfolded");
+		this.unfolded = true;
 
-        if (this.beautifulSelect !== undefined)
-        {
-            const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
-            TITLE.classList.add("active");
-        }
+		if (this.beautifulSelect !== undefined)
+		{
+			const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
+			TITLE.classList.add("active");
+		}
+	}
 
-    }
+	/**
+	 * hide
+	 */
+	public hide(): void
+	{
+		this.style.height = "0px";
+		this.classList.remove("unfolded");
+		this.unfolded = false;
 
-    /**
-     * hide
-     */
-    public hide(): void
-    {
-        this.style.height = "0px";
-        this.classList.remove("unfolded");
-        this.unfolded = false;
+		if (this.beautifulSelect !== undefined)
+		{
+			const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
+			TITLE.classList.remove("active");
+		}
+	}
 
-        if (this.beautifulSelect !== undefined)
-        {
-            const TITLE: BeautifulTitle = this.beautifulSelect.getTitle();
-            TITLE.classList.remove("active");
-        }
-    }
+	/**
+	 * toggleDisplay
+	 */
+	public toggleDisplay(): void
+	{
+		if (this.unfolded)
+		{
+			this.hide();
+		}
+		else
+		{
+			this.show();
+		}
+	}
 
-    /**
-     * toggleDisplay
-     */
-    public toggleDisplay(): void
-    {
-        if (this.unfolded)
-        {
-            this.hide();
-        }
-        else
-        {
-            this.show();
-        }
-    }
+	/**
+	 * refresh
+	 */
+	public async refresh(): Promise<void>
+	{
+		await Promise.all(
+			this.options.map(
+				async (option: BeautifulOption): Promise<void> =>
+				{
+					return await option.build();
+				}
+			)
+		);
 
-    /**
-     * refresh
-     */
-    public async refresh(): Promise<void>
-    {
-        await Promise.all(
-            this.options.map(
-                async(option: BeautifulOption): Promise<void> => {
-                    return option.build();
-                }
-            )
-        );
-        await Promise.all(
-            this.groups.map(
-                async(group: BeautifulGroup): Promise<void> => {
-                    return group.refresh();
-                }
-            )
-        );
-    }
+		await Promise.all(
+			this.groups.map(
+				async (group: BeautifulGroup): Promise<void> =>
+				{
+					return await group.refresh();
+				}
+			)
+		);
+	}
 
-    /**
-     * getValues
-     */
-    public async getValues(): Promise<Array<string>>
-    {
-        let values: Array<string> = [];
+	/**
+	 * getValues
+	 */
+	public async getValues(): Promise<Array<string>>
+	{
+		let values: Array<string> = [];
 
-        await Promise.all(
-            this.options.map(
-                (option: BeautifulOption): void => {
-                    if (option.getActive())
-                    {
-                        values.push(option.getValue());
-                    }
-                }
-            )
-        );
+		await Promise.all(
+			this.options.map(
+				(option: BeautifulOption): undefined =>
+				{
+					if (option.getActive())
+					{
+						values.push(option.getValue());
+					}
 
-        await Promise.all(
-            this.groups.map(
-                async(group: BeautifulGroup): Promise<void> => {
-                    values = values.concat(await group.getValues());
-                }
-            )
-        );
+					return undefined;
+				}
+			)
+		);
 
-        return values;
-    }
+		await Promise.all(
+			this.groups.map(
+				async (group: BeautifulGroup): Promise<void> =>
+				{
+					values = values.concat(await group.getValues());
+				}
+			)
+		);
 
-    /**
-     * getActiveContents
-     */
-    public async getActiveContents(): Promise<Array<string>>
-    {
-        let contents: Array<string> = [];
+		return values;
+	}
 
-        await Promise.all(
-            this.options.map(
-                (option: BeautifulOption): void => {
-                    if (option.getActive())
-                    {
-                        contents.push(option.getContent());
-                    }
-                }
-            )
-        );
+	/**
+	 * getActiveContents
+	 */
+	public async getActiveContents(): Promise<Array<string>>
+	{
+		let contents: Array<string> = [];
 
-        await Promise.all(
-            this.groups.map(
-                async(group: BeautifulGroup): Promise<void> => {
-                    contents = contents.concat(await group.getActiveContents());
-                }
-            )
-        );
+		await Promise.all(
+			this.options.map(
+				(option: BeautifulOption): undefined =>
+				{
+					if (option.getActive())
+					{
+						contents.push(option.getContent());
+					}
 
-        return contents;
-    }
+					return undefined;
+				}
+			)
+		);
+
+		await Promise.all(
+			this.groups.map(
+				async (group: BeautifulGroup): Promise<undefined> =>
+				{
+					contents = contents.concat(await group.getActiveContents());
+
+					return undefined;
+				}
+			)
+		);
+
+		return contents;
+	}
 }
 
 if (customElements.get("beautiful-list") === undefined)
 {
-    customElements.define("beautiful-list", BeautifulList);
+	customElements.define("beautiful-list", BeautifulList);
 }
 
 export { BeautifulList };

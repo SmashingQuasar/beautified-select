@@ -1,4 +1,4 @@
-import { BeautifiedSelectConfiguration } from "../declarations/BeautifiedSelectConfiguration.js";
+import type { BeautifiedSelectConfiguration } from "../declarations/BeautifiedSelectConfiguration.js";
 import { BeautifulList } from "./BeautifulList.js";
 import { BeautifulGroup } from "./BeautifulGroup.js";
 import { BeautifulOption } from "./BeautifulOption.js";
@@ -6,195 +6,201 @@ import { BeautifulTitle } from "./BeautifulTitle.js";
 
 class BeautifulSelect extends HTMLElement
 {
-    private readonly ORIGINAL_SELECT: HTMLSelectElement;
-    private beautifulTitle: BeautifulTitle;
-    private list: BeautifulList;
-    private multiple: boolean = false;
-    private readonly PLACEHOLDER: string|undefined;
-    private readonly DISPLAYED_OPTION: number = 3;
+	private readonly originalSelect: HTMLSelectElement;
+	private beautifulTitle: BeautifulTitle;
+	private list: BeautifulList;
+	private multiple: boolean = false;
+	private readonly placeholder: string|undefined;
+	private readonly displayedOption: number = 3;
 
-    /**
-     * constructor
-     */
-    public constructor(select: HTMLSelectElement, configuration?: BeautifiedSelectConfiguration)
-    {
-        super();
+	/**
+	 * constructor
+	 */
+	public constructor(select: HTMLSelectElement, configuration?: BeautifiedSelectConfiguration)
+	{
+		super();
 
-        /* Handling configuration */
+		/* Handling configuration */
 
-        if (configuration !== undefined)
-        {
-            if (configuration.placeholder !== undefined)
-            {
-                this.PLACEHOLDER = configuration.placeholder;
-            }
-            if (configuration.displayedOptions !== undefined)
-            {
-                this.DISPLAYED_OPTION = configuration.displayedOptions;
-            }
-        }
+		if (configuration !== undefined)
+		{
+			if (configuration.placeholder !== undefined)
+			{
+				this.placeholder = configuration.placeholder;
+			}
 
-        /* Managing vanilla select */
+			if (configuration.displayedOptions !== undefined)
+			{
+				this.displayedOption = configuration.displayedOptions;
+			}
+		}
 
-        this.ORIGINAL_SELECT = select;
-        this.ORIGINAL_SELECT.addEventListener("change", this.refresh.bind(this));
+		/* Managing vanilla select */
 
-        /* Creating title */
+		this.originalSelect = select;
+		this.originalSelect.addEventListener("change", this.refresh.bind(this));
 
-        this.beautifulTitle = new BeautifulTitle();
-        this.appendChild(this.beautifulTitle);
-        this.beautifulTitle.setBeautifulSelect(this);
+		/* Creating title */
 
-        /* Creating list */
+		this.beautifulTitle = new BeautifulTitle();
+		this.appendChild(this.beautifulTitle);
+		this.beautifulTitle.setBeautifulSelect(this);
 
-        this.list = new BeautifulList();
-        this.appendChild(this.list);
-        this.list.setBeautifulSelect(this);
+		/* Creating list */
 
-        this.beautifulTitle.refresh().then(
-            (): void => {
-                console.info("Beautiful Title successfully refreshed.");
-            },
-            (error: Error): void => {
-                console.error(`Error occurred while refreshing Beautiful Title: ${error.message}`);
-            }
-        );
-    }
+		this.list = new BeautifulList();
+		this.appendChild(this.list);
+		this.list.setBeautifulSelect(this);
 
-    /**
-     * getDisplayedOptions
-     */
-    public getDisplayedOptions(): number
-    {
-        return this.DISPLAYED_OPTION;
-    }
+		this.beautifulTitle.refresh().then(
+			(): void =>
+			{
+				console.info("Beautiful Title successfully refreshed.");
+			},
+			(error: Error): void =>
+			{
+				console.error(`Error occurred while refreshing Beautiful Title: ${error.message}`);
+			}
+		);
+	}
 
-    /**
-     * getTitle
-     */
-    public getTitle(): BeautifulTitle
-    {
-        return this.beautifulTitle;
-    }
+	/**
+	 * getDisplayedOptions
+	 */
+	public getDisplayedOptions(): number
+	{
+		return this.displayedOption;
+	}
 
-    /**
-     * setTitle
-     */
-    public setTitle(title: BeautifulTitle): void
-    {
-        this.beautifulTitle = title;
-    }
+	/**
+	 * getTitle
+	 */
+	public getTitle(): BeautifulTitle
+	{
+		return this.beautifulTitle;
+	}
 
-    /**
-     * getList
-     */
-    public getList(): BeautifulList|undefined
-    {
-        return this.list;
-    }
+	/**
+	 * setTitle
+	 */
+	public setTitle(title: BeautifulTitle): void
+	{
+		this.beautifulTitle = title;
+	}
 
-    /**
-     * setList
-     */
-    public setList(list: BeautifulList): void
-    {
-        this.list = list;
-    }
+	/**
+	 * getList
+	 */
+	public getList(): BeautifulList|undefined
+	{
+		return this.list;
+	}
 
-    /**
-     * getPlaceholder
-     */
-    public getPlaceholder(): string|undefined
-    {
-        return this.PLACEHOLDER;
-    }
+	/**
+	 * setList
+	 */
+	public setList(list: BeautifulList): void
+	{
+		this.list = list;
+	}
 
-    /**
-     * getOriginalSelect
-     */
-    public getOriginalSelect(): HTMLSelectElement
-    {
-        return this.ORIGINAL_SELECT;
-    }
+	/**
+	 * getPlaceholder
+	 */
+	public getPlaceholder(): string|undefined
+	{
+		return this.placeholder;
+	}
 
-    /**
-     * getMultiple
-     */
-    public getMultiple(): boolean
-    {
-        return this.multiple;
-    }
+	/**
+	 * getOriginalSelect
+	 */
+	public getOriginalSelect(): HTMLSelectElement
+	{
+		return this.originalSelect;
+	}
 
-    /**
-     * build
-     */
-    public async build(): Promise<BeautifulSelect>
-    {
-        this.multiple = this.ORIGINAL_SELECT.multiple;
+	/**
+	 * getMultiple
+	 */
+	public getMultiple(): boolean
+	{
+		return this.multiple;
+	}
 
-        await this.list.clean();
+	/**
+	 * build
+	 */
+	public async build(): Promise<BeautifulSelect>
+	{
+		this.multiple = this.originalSelect.multiple;
 
-        await Promise.all(
-            Array.from(this.ORIGINAL_SELECT.children).map(
-                (children: Element): void => {
-                    if (children instanceof HTMLOptionElement)
-                    {
-                        const OPTION: BeautifulOption = new BeautifulOption(children);
-                        OPTION.setBeautifulSelect(this);
-                        this.list.add(OPTION);
-                    }
-                    if (children instanceof HTMLOptGroupElement)
-                    {
-                        const GROUP: BeautifulGroup = new BeautifulGroup(children);
-                        GROUP.setBeautifulSelect(this);
-                        this.list.add(GROUP);
-                    }
-                }
-            )
-        );
+		await this.list.clean();
 
-        await this.beautifulTitle.refresh();
+		await Promise.all(
+			Array.from(this.originalSelect.children).map(
+				(children: Element): undefined =>
+				{
+					if (children instanceof HTMLOptionElement)
+					{
+						const OPTION: BeautifulOption = new BeautifulOption(children);
+						OPTION.setBeautifulSelect(this);
+						this.list.add(OPTION);
+					}
 
-        return this;
-    }
+					if (children instanceof HTMLOptGroupElement)
+					{
+						const GROUP: BeautifulGroup = new BeautifulGroup(children);
+						GROUP.setBeautifulSelect(this);
+						this.list.add(GROUP);
+					}
 
-    /**
-     * refresh
-     */
-    public async refresh(): Promise<void>
-    {
-        await this.list.refresh();
-    }
+					return undefined;
+				}
+			)
+		);
 
-    /**
-     * getValues
-     */
-    public async getValues(): Promise<Array<string>>
-    {
-        return this.list.getValues();
-    }
+		await this.beautifulTitle.refresh();
 
-    /**
-     * getActiveContents
-     */
-    public async getActiveContents(): Promise<Array<string>>
-    {
-        return this.list.getActiveContents();
-    }
+		return this;
+	}
 
-    /**
-     * refreshTitle
-     */
-    public async refreshTitle(): Promise<void>
-    {
-        return this.beautifulTitle.refresh();
-    }
+	/**
+	 * refresh
+	 */
+	public async refresh(): Promise<void>
+	{
+		await this.list.refresh();
+	}
 
+	/**
+	 * getValues
+	 */
+	public async getValues(): Promise<Array<string>>
+	{
+		return await this.list.getValues();
+	}
+
+	/**
+	 * getActiveContents
+	 */
+	public async getActiveContents(): Promise<Array<string>>
+	{
+		return await this.list.getActiveContents();
+	}
+
+	/**
+	 * refreshTitle
+	 */
+	public async refreshTitle(): Promise<void>
+	{
+		return await this.beautifulTitle.refresh();
+	}
 }
 
 if (customElements.get("beautiful-select") === undefined)
 {
-    customElements.define("beautiful-select", BeautifulSelect);
+	customElements.define("beautiful-select", BeautifulSelect);
 }
 
 export { BeautifulSelect };

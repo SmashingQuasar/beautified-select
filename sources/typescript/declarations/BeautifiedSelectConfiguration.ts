@@ -1,7 +1,7 @@
 declare interface BeautifiedSelectConfiguration
 {
-    placeholder?: string;
-    displayedOptions?: number;
+	placeholder?: string;
+	displayedOptions?: number;
 }
 
 export { BeautifiedSelectConfiguration };

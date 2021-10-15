@@ -1,239 +1,227 @@
-import { BeautifulSelect } from "./BeautifulSelect.js";
-import { BeautifulList } from "./BeautifulList.js";
+import type { BeautifulSelect } from "./BeautifulSelect.js";
+import type { BeautifulList } from "./BeautifulList.js";
 
 class BeautifulOption extends HTMLElement
 {
-    private originalOption: HTMLOptionElement;
-    private beautifulSelect: BeautifulSelect|undefined;
-    private active: boolean = false;
-    private value: string = "";
-    private content: string = "";
+	private originalOption: HTMLOptionElement;
+	private beautifulSelect: BeautifulSelect|undefined;
+	private active: boolean = false;
+	private value: string = "";
+	private content: string = "";
 
-    /**
-     * constructor
-     */
-    public constructor(option: HTMLOptionElement)
-    {
-        super();
+	/**
+	 * constructor
+	 */
+	public constructor(option: HTMLOptionElement)
+	{
+		super();
 
-        /* Managing vanilla option */
+		/* Managing vanilla option */
 
-        this.originalOption = option;
+		this.originalOption = option;
 
-        this.build().then(
-            (): void => {
-                console.info("Beautiful Option successfully built.");
-            },
-            (error: Error): void => {
-                console.error(`Error occurred while refreshing Beautiful Option: ${error.message}`);
-            }
-        );
+		this.build().then(
+			(): void =>
+			{
+				console.info("Beautiful Option successfully built.");
+			},
+			(error: Error): void =>
+			{
+				console.error(`Error occurred while refreshing Beautiful Option: ${error.message}`);
+			}
+		);
 
-        this.addEventListener("click", this.toggleActivation.bind(this));
-    }
+		this.addEventListener("click", this.toggleActivation.bind(this));
+	}
 
-    /**
-     * getActive
-     */
-    public getActive(): boolean
-    {
-        return this.active;
-    }
+	/**
+	 * getActive
+	 */
+	public getActive(): boolean
+	{
+		return this.active;
+	}
 
-    /**
-     * getOriginalOption
-     */
-    public getOriginalOption(): HTMLOptionElement|null
-    {
-        return this.originalOption;
-    }
+	/**
+	 * getOriginalOption
+	 */
+	public getOriginalOption(): HTMLOptionElement|null
+	{
+		return this.originalOption;
+	}
 
-    /**
-     * getValue
-     */
-    public getValue(): string
-    {
-        return this.value;
-    }
+	/**
+	 * getValue
+	 */
+	public getValue(): string
+	{
+		return this.value;
+	}
 
-    /**
-     * getContent
-     */
-    public getContent(): string
-    {
-        return this.content;
-    }
+	/**
+	 * getContent
+	 */
+	public getContent(): string
+	{
+		return this.content;
+	}
 
-    /**
-     * setContent
-     */
-    public setContent(content: string): void
-    {
-        this.content = content;
-        this.innerHTML = content;
-    }
+	/**
+	 * setContent
+	 */
+	public setContent(content: string): void
+	{
+		this.content = content;
+		this.innerHTML = content;
+	}
 
-    /**
-     * getBeautifulSelect
-     */
-    public getBeautifulSelect(): BeautifulSelect|undefined
-    {
-        return this.beautifulSelect;
-    }
+	/**
+	 * getBeautifulSelect
+	 */
+	public getBeautifulSelect(): BeautifulSelect|undefined
+	{
+		return this.beautifulSelect;
+	}
 
-    /**
-     * setBeautifulSelect
-     */
-    public setBeautifulSelect(beautiful_select: BeautifulSelect): void
-    {
-        this.beautifulSelect = beautiful_select;
-    }
+	/**
+	 * setBeautifulSelect
+	 */
+	public setBeautifulSelect(beautiful_select: BeautifulSelect): void
+	{
+		this.beautifulSelect = beautiful_select;
+	}
 
-    /**
-     * activate
-     */
-    public async activate(): Promise<void>
-    {
-        this.active = true;
-        this.classList.add("active");
+	/**
+	 * activate
+	 */
+	public async activate(): Promise<void>
+	{
+		this.active = true;
+		this.classList.add("active");
 
-        if (this.originalOption === undefined)
-        {
-            return;
-        }
+		this.originalOption.selected = true;
 
-        this.originalOption.selected = true;
+		if (this.beautifulSelect === undefined)
+		{
+			return;
+		}
 
-        if (this.beautifulSelect === undefined)
-        {
-            return;
-        }
+		const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
 
-        const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
+		this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+		await this.beautifulSelect.refreshTitle();
 
-        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
-        await this.beautifulSelect.refreshTitle();
+		const LIST: BeautifulList|undefined = this.beautifulSelect.getList();
 
-        const LIST: BeautifulList|undefined = this.beautifulSelect.getList();
+		if (LIST === undefined)
+		{
+			return;
+		}
 
-        if (LIST === undefined)
-        {
-            return;
-        }
+		if (!this.beautifulSelect.getMultiple())
+		{
+			LIST.hide();
+		}
+	}
 
-        if (this.beautifulSelect.getMultiple() === false)
-        {
-            LIST.hide();
-        }
+	/**
+	 * deactivate
+	 */
+	public async deactivate(): Promise<void>
+	{
+		this.active = false;
+		this.classList.remove("active");
 
-    }
+		this.originalOption.selected = false;
 
-    /**
-     * deactivate
-     */
-    public async deactivate(): Promise<void>
-    {
-        this.active = false;
-        this.classList.remove("active");
+		if (this.beautifulSelect === undefined)
+		{
+			return;
+		}
 
-        if (this.originalOption === undefined)
-        {
-            return;
-        }
+		const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
 
-        this.originalOption.selected = false;
+		this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
+		await this.beautifulSelect.refreshTitle();
 
-        if (this.beautifulSelect === undefined)
-        {
-            return;
-        }
+		const LIST: BeautifulList|undefined = this.beautifulSelect.getList();
 
-        const CUSTOM_CHANGE_EVENT: CustomEvent = new CustomEvent("change");
+		if (LIST === undefined)
+		{
+			return;
+		}
 
-        this.beautifulSelect.getOriginalSelect().dispatchEvent(CUSTOM_CHANGE_EVENT);
-        await this.beautifulSelect.refreshTitle();
+		if (!this.beautifulSelect.getMultiple())
+		{
+			LIST.hide();
+		}
+	}
 
-        const LIST: BeautifulList|undefined = this.beautifulSelect.getList();
+	/**
+	 * toggleActivation
+	 */
+	public async toggleActivation(event: Event): Promise<boolean>
+	{
+		event.preventDefault();
 
-        if (LIST === undefined)
-        {
-            return;
-        }
+		if (this.beautifulSelect !== undefined)
+		{
+			if (this.beautifulSelect.getMultiple() && this.active)
+			{
+				await this.deactivate();
+			}
+			else
+			{
+				await this.activate();
+			}
+		}
 
-        if (this.beautifulSelect.getMultiple() === false)
-        {
-            LIST.hide();
-        }
+		return this.active;
+	}
 
+	/**
+	 * build
+	 */
+	public async build(): Promise<void>
+	{
+		this.value = this.originalOption.value;
+		this.hidden = this.originalOption.hidden;
 
-    }
+		if (this.content === "")
+		{
+			if (typeof this.originalOption.textContent === "string")
+			{
+				this.setContent(this.originalOption.textContent);
+			}
+			else
+			{
+				this.setContent("");
+			}
+		}
 
-    /**
-     * toggleActivation
-     */
-    public async toggleActivation(event: Event): Promise<boolean>
-    {
-        event.preventDefault();
-        if (this.beautifulSelect !== undefined)
-        {
-            if (this.beautifulSelect.getMultiple() && this.active)
-            {
-                await this.deactivate();
-            }
-            else
-            {
-                await this.activate();
-            }
-        }
+		if (this.originalOption.selected)
+		{
+			this.active = true;
+			this.classList.add("active");
 
-        return this.active;
-    }
+			if (this.beautifulSelect === undefined)
+			{
+				return;
+			}
 
-    /**
-     * build
-     */
-    public async build(): Promise<void>
-    {
-        this.value = this.originalOption.value;
-        this.hidden = this.originalOption.hidden;
-
-        if (this.content === "")
-        {
-            if (typeof this.originalOption.textContent === "string")
-            {
-                this.setContent(this.originalOption.textContent);
-            }
-            else
-            {
-                this.setContent("");
-            }
-        }
-
-        if (this.originalOption.selected)
-        {
-            this.active = true;
-            this.classList.add("active");
-
-            if (this.beautifulSelect === undefined)
-            {
-                return;
-            }
-
-            await this.beautifulSelect.refreshTitle();
-
-        }
-        else
-        {
-            this.active = false;
-            this.classList.remove("active");
-        }
-    }
-
+			await this.beautifulSelect.refreshTitle();
+		}
+		else
+		{
+			this.active = false;
+			this.classList.remove("active");
+		}
+	}
 }
 
 if (customElements.get("beautiful-option") === undefined)
 {
-    customElements.define("beautiful-option", BeautifulOption);
+	customElements.define("beautiful-option", BeautifulOption);
 }
 
 export { BeautifulOption };
